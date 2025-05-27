@@ -17,7 +17,6 @@
         </div>
     </div>
 
-    <!-- Cards de Estatísticas -->
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card text-center">
@@ -56,7 +55,6 @@
         </div>
     </div>
 
-    <!-- Gráfico e Informações -->
     <div class="row mb-4">
         <div class="col-md-6">
             <div class="card">
@@ -107,7 +105,6 @@
         </div>
     </div>
 
-    <!-- Ações Rápidas -->
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -152,13 +149,32 @@
         </div>
     </div>
 
-    <!-- Script para o gráfico -->
     <script th:inline="javascript">
         document.addEventListener('DOMContentLoaded', function() {
             const ctx = document.getElementById('graficoOcupacao').getContext('2d');
 
             const vagasOcupadas = /*[[${abrigo.vagasOcupadas}]]*/ 0;
             const vagasDisponiveis = /*[[${vagasDisponiveis}]]*/ 0;
+            const percentualOcupacao = vagasOcupadas / (vagasOcupadas + vagasDisponiveis);
+
+            // Cores da nova paleta
+            const cores = {
+                primaria: '#F66B0E',
+                secundaria: '#4482A7',
+                dourada: '#DBA373',
+                verdeSuave: '#C3BF95',
+                escura1: '#13293E',
+                danger: '#ef5350'
+            };
+
+            let corOcupadas;
+            if (percentualOcupacao > 0.8) {
+                corOcupadas = cores.danger;
+            } else if (percentualOcupacao > 0.6) {
+                corOcupadas = cores.dourada;
+            } else {
+                corOcupadas = cores.primaria;
+            }
 
             new Chart(ctx, {
                 type: 'doughnut',
@@ -167,12 +183,13 @@
                     datasets: [{
                         data: [vagasOcupadas, vagasDisponiveis],
                         backgroundColor: [
-                            vagasOcupadas / (vagasOcupadas + vagasDisponiveis) > 0.8 ? '#dc3545' :
-                                vagasOcupadas / (vagasOcupadas + vagasDisponiveis) > 0.6 ? '#ffc107' : '#fd7e14',
-                            '#28a745'
+                            corOcupadas,
+                            cores.verdeSuave
                         ],
-                        borderWidth: 2,
-                        borderColor: '#fff'
+                        borderWidth: 3,
+                        borderColor: '#fff',
+                        hoverBorderWidth: 4,
+                        hoverOffset: 10
                     }]
                 },
                 options: {
@@ -183,9 +200,26 @@
                             position: 'bottom',
                             labels: {
                                 padding: 20,
-                                usePointStyle: true
+                                usePointStyle: true,
+                                font: {
+                                    size: 14,
+                                    family: 'system-ui'
+                                },
+                                color: cores.escura1
                             }
+                        },
+                        tooltip: {
+                            backgroundColor: cores.escura1,
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            cornerRadius: 8,
+                            displayColors: true
                         }
+                    },
+                    cutout: '60%',
+                    animation: {
+                        animateRotate: true,
+                        duration: 1000
                     }
                 }
             });

@@ -10,38 +10,232 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        :root {
+            --cor-primaria: #F66B0E;
+            --cor-secundaria: #4482A7;
+            --cor-escura-1: #13293E;
+            --cor-escura-2: #132A3C;
+            --cor-dourada: #DBA373;
+            --cor-verde-suave: #C3BF95;
+            --cor-bege-claro: #E6E2DF;
+            --cor-creme: #FFF4E1;
+            --cor-cinza-claro: #EFEFEF;
+        }
+
+        body {
+            background-color: var(--cor-cinza-claro);
+        }
+
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--cor-escura-1) 0%, var(--cor-escura-2) 100%);
         }
+
         .navbar-brand {
             font-weight: bold;
             color: white !important;
         }
+
         .nav-link {
             color: rgba(255,255,255,0.8) !important;
             transition: all 0.3s;
+            padding: 12px 16px;
+            margin-bottom: 4px;
+            border-radius: 8px;
         }
+
         .nav-link:hover {
             color: white !important;
-            background-color: rgba(255,255,255,0.1);
-            border-radius: 5px;
+            background-color: var(--cor-primaria);
+            transform: translateX(5px);
         }
+
         .card {
             border: none;
             border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background-color: white;
         }
+
+        .card-header {
+            background-color: var(--cor-bege-claro);
+            border-bottom: 2px solid var(--cor-primaria);
+            border-radius: 15px 15px 0 0 !important;
+        }
+
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
+            background-color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+            transition: all 0.3s;
         }
+
+        .btn-primary:hover {
+            background-color: #e55a00;
+            border-color: #e55a00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(246, 107, 14, 0.3);
+        }
+
+        .btn-outline-primary {
+            color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--cor-primaria);
+            border-color: var(--cor-primaria);
+        }
+
+        .btn-outline-secondary {
+            color: var(--cor-secundaria);
+            border-color: var(--cor-secundaria);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--cor-secundaria);
+            border-color: var(--cor-secundaria);
+        }
+
+        .text-primary {
+            color: var(--cor-primaria) !important;
+        }
+
+        .border-primary {
+            border-color: var(--cor-primaria) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--cor-primaria) !important;
+        }
+
+        .text-info {
+            color: var(--cor-secundaria) !important;
+        }
+
+        .border-info {
+            border-color: var(--cor-secundaria) !important;
+        }
+
+        .text-warning {
+            color: var(--cor-dourada) !important;
+        }
+
+        .border-warning {
+            border-color: var(--cor-dourada) !important;
+        }
+
+        .text-success {
+            color: var(--cor-verde-suave) !important;
+        }
+
+        .border-success {
+            border-color: var(--cor-verde-suave) !important;
+        }
+
+        .progress-bar {
+            background-color: var(--cor-primaria);
+        }
+
+        .progress-bar.bg-warning {
+            background-color: var(--cor-dourada) !important;
+        }
+
+        .progress-bar.bg-success {
+            background-color: var(--cor-verde-suave) !important;
+        }
+
+        .badge.bg-primary {
+            background-color: var(--cor-primaria) !important;
+        }
+
+        .badge.bg-secondary {
+            background-color: var(--cor-secundaria) !important;
+        }
+
+        .badge.bg-warning {
+            background-color: var(--cor-dourada) !important;
+            color: var(--cor-escura-1) !important;
+        }
+
+        .badge.bg-success {
+            background-color: var(--cor-verde-suave) !important;
+            color: var(--cor-escura-1) !important;
+        }
+
+        .display-4, .display-6 {
+            font-weight: 600;
+        }
+
+        .alert-success {
+            background-color: var(--cor-creme);
+            border-color: var(--cor-verde-suave);
+            color: var(--cor-escura-1);
+        }
+
+        .alert-danger {
+            background-color: #ffebee;
+            border-color: #ef5350;
+            color: var(--cor-escura-1);
+        }
+
+        .form-control:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 0.2rem rgba(246, 107, 14, 0.25);
+        }
+
+        .form-select:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 0.2rem rgba(246, 107, 14, 0.25);
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: var(--cor-creme);
+        }
+
+        .table-light {
+            background-color: var(--cor-bege-claro);
+        }
+
+        h2, h5, h6 {
+            color: var(--cor-escura-1);
+        }
+
         .badge-ocupacao {
             font-size: 0.8em;
         }
+
+        /* Customização específica para diferentes porcentagens de ocupação */
+        .ocupacao-baixa {
+            color: var(--cor-verde-suave) !important;
+        }
+
+        .ocupacao-media {
+            color: var(--cor-dourada) !important;
+        }
+
+        .ocupacao-alta {
+            color: #ef5350 !important;
+        }
+
+        /* Estilo para cards de estatísticas */
+        .card.border-primary .card-body {
+            background: linear-gradient(135deg, rgba(246, 107, 14, 0.1) 0%, rgba(246, 107, 14, 0.05) 100%);
+        }
+
+        .card.border-info .card-body {
+            background: linear-gradient(135deg, rgba(68, 130, 167, 0.1) 0%, rgba(68, 130, 167, 0.05) 100%);
+        }
+
+        .card.border-warning .card-body {
+            background: linear-gradient(135deg, rgba(219, 163, 115, 0.1) 0%, rgba(219, 163, 115, 0.05) 100%);
+        }
+
+        .card.border-success .card-body {
+            background: linear-gradient(135deg, rgba(195, 191, 149, 0.1) 0%, rgba(195, 191, 149, 0.05) 100%);
+        }
     </style>
 </head>
-<body class="bg-light">
+<body>
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-2 p-0">
