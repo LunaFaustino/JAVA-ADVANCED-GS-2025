@@ -3,7 +3,6 @@ package br.com.fiap.abrigue.service;
 import br.com.fiap.abrigue.model.entity.Abrigo;
 import br.com.fiap.abrigue.model.enums.StatusAbrigo;
 import br.com.fiap.abrigue.repository.AbrigoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,8 +11,11 @@ import java.util.Optional;
 @Service
 public class AbrigoService {
 
-    @Autowired
-    private AbrigoRepository abrigoRepository;
+    private final AbrigoRepository abrigoRepository;
+
+    public AbrigoService(AbrigoRepository abrigoRepository) {
+        this.abrigoRepository = abrigoRepository;
+    }
 
     public List<Abrigo> listarTodos() {
         return abrigoRepository.findAll();

@@ -1,5 +1,6 @@
 package br.com.fiap.abrigue.model.entity;
 
+import br.com.fiap.abrigue.model.enums.SituacaoEspecial;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;

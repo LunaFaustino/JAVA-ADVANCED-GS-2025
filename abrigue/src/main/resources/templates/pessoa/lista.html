@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::content})}">
+
+<th:block th:fragment="content">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>
+      <i class="fas fa-users me-2"></i>
+      <span th:if="${abrigo != null}" th:text="'Pessoas - ' + ${abrigo.nome}">Pessoas do Abrigo</span>
+      <span th:unless="${abrigo != null}">Gerenciar Pessoas</span>
+    </h2>
+    <div>
+      <a th:href="${abrigo != null ? '/pessoas/novo?abrigoId=' + abrigo.id : '/pessoas/novo'}"
+         class="btn btn-primary me-2">
+        <i class="fas fa-plus me-2"></i>Nova Pessoa
+      </a>
+      <a th:if="${abrigo != null}" th:href="@{/abrigos/{id}(id=${abrigo.id})}"
+         class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Voltar ao Abrigo
+      </a>
+      <a th:unless="${abrigo != null}" href="/dashboard" class="btn btn-outline-secondary">
+        <i class="fas fa-home me-2"></i>Dashboard
+      </a>
+    </div>
+  </div>
+
+  <!-- Busca -->
+  <div class="card mb-4">
+    <div class="card-body">
+      <form method="get" class="row g-3">
+        <input type="hidden" name="abrigoId" th:value="${abrigo?.id}">
+        <div class="col-md-10">
+          <input type="text" class="form-control" name="busca"
+                 th:value="${busca}" placeholder="Buscar por nome da pessoa...">
+        </div>
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-outline-primary w-100">
+            <i class="fas fa-search me-2"></i>Buscar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lista de Pessoas -->
+  <div class="row">
+    <div class="col-12" th:if="${#lists.isEmpty(pessoas)}">
+      <div class="card text-center">
+        <div class="card-body">
+          <i class="fas fa-users fa-3x text-muted mb-3"></i>
+          <p class="text-muted">Nenhuma pessoa encontrada.</p>
+          <a th:href="${abrigo != null ? '/pessoas/novo?abrigoId=' + abrigo.id : '/pessoas/novo'}"
+             class="btn btn-primary">Cadastrar Primeira Pessoa</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4 mb-4" th:each="pessoa : ${pessoas}">
+      <div class="card h-100">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h6 class="mb-0" th:text="${pessoa.nome}">Nome da Pessoa</h6>
+          <span th:if="${pessoa.situacaoEspecial != null and pessoa.situacaoEspecial.name() != 'NENHUMA'}"
+                class="badge bg-warning text-dark"
+                th:text="${pessoa.situacaoEspecial.descricao}">Situação</span>
+        </div>
+        <div class="card-body">
+          <p class="card-text mb-2">
+            <i class="fas fa-id-card me-2"></i>
+            <strong>CPF:</strong> <span th:text="${pessoa.cpf}">000.000.000-00</span>
+          </p>
+
+          <p class="card-text mb-2" th:if="${pessoa.idade != null}">
+            <i class="fas fa-birthday-cake me-2"></i>
+            <strong>Idade:</strong> <span th:text="${pessoa.idade}">0</span> anos
+          </p>
+
+          <p class="card-text mb-2" th:if="${pessoa.telefone}">
+            <i class="fas fa-phone me-2"></i>
+            <strong>Telefone:</strong> <span th:text="${pessoa.telefone}">-</span>
+          </p>
+
+          <p class="card-text mb-2" th:if="${pessoa.abrigo != null}">
+            <i class="fas fa-building me-2"></i>
+            <strong>Abrigo:</strong> <span th:text="${pessoa.abrigo.nome}">-</span>
+          </p>
+
+          <p class="card-text" th:if="${pessoa.dataEntrada != null}">
+            <small class="text-muted">
+              <i class="fas fa-calendar me-1"></i>
+              Entrada: <span th:text="${#dates.format(pessoa.dataEntrada, 'dd/MM/yyyy HH:mm')}">-</span>
+            </small>
+          </p>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+          <div>
+            <a th:href="@{/pessoas/{id}/editar(id=${pessoa.id})}"
+               class="btn btn-outline-secondary btn-sm">
+              <i class="fas fa-edit me-1"></i>Editar
+            </a>
+          </div>
+          <form method="post" th:action="@{/pessoas/{id}/deletar(id=${pessoa.id})}"
+                class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta pessoa?')">
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              <i class="fas fa-trash me-1"></i>Remover
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</th:block>
+
+</html>

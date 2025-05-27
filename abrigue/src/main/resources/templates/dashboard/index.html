@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-chart-bar me-2"></i>Dashboard</h2>
+        <span class="badge bg-primary fs-6">Sistema Abrigue-se</span>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center border-primary">
+                <div class="card-body">
+                    <div class="display-4 text-primary mb-2" th:text="${totalAbrigos}">0</div>
+                    <h6 class="card-title text-muted">Total de Abrigos</h6>
+                    <small class="text-muted">
+                        <i class="fas fa-building me-1"></i>Cadastrados
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-info">
+                <div class="card-body">
+                    <div class="display-4 text-info mb-2" th:text="${totalVagas}">0</div>
+                    <h6 class="card-title text-muted">Capacidade Total</h6>
+                    <small class="text-muted">
+                        <i class="fas fa-bed me-1"></i>Vagas totais
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-warning">
+                <div class="card-body">
+                    <div class="display-4 text-warning mb-2" th:text="${totalOcupadas}">0</div>
+                    <h6 class="card-title text-muted">Vagas Ocupadas</h6>
+                    <small class="text-muted">
+                        <i class="fas fa-users me-1"></i>Pessoas abrigadas
+                    </small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center border-success">
+                <div class="card-body">
+                    <div class="display-4 text-success mb-2" th:text="${totalDisponiveis}">0</div>
+                    <h6 class="card-title text-muted">Vagas Livres</h6>
+                    <small class="text-muted">
+                        <i class="fas fa-check-circle me-1"></i>Disponíveis agora
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-list me-2"></i>Resumo dos Abrigos
+                    </h5>
+                    <a href="/abrigos" class="btn btn-outline-primary btn-sm">
+                        Ver Todos <i class="fas fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    <div th:if="${#lists.isEmpty(abrigos)}" class="text-center py-5">
+                        <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                        <p class="text-muted mb-3">Nenhum abrigo cadastrado ainda.</p>
+                        <a href="/abrigos/novo" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Abrigo
+                        </a>
+                    </div>
+
+                    <div th:unless="${#lists.isEmpty(abrigos)}" class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Nome do Abrigo</th>
+                                <th>Status</th>
+                                <th>Ocupação</th>
+                                <th>Vagas</th>
+                                <th>Responsável</th>
+                                <th>Ações</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="abrigo : ${abrigos}">
+                                <td>
+                                    <strong th:text="${abrigo.nome}">Nome</strong><br>
+                                    <small class="text-muted" th:text="${abrigo.endereco}">Endereço</small>
+                                </td>
+                                <td>
+                                    <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                                 (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
+                                          th:text="${abrigo.status.descricao}">Status</span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar" role="progressbar"
+                                             th:style="'width: ' + (${abrigo.vagasOcupadas} * 100 / ${abrigo.capacidadeMaxima}) + '%'"
+                                             th:classappend="${abrigo.vagasOcupadas * 100 / abrigo.capacidadeMaxima > 80} ? 'bg-danger' :
+                                                           (${abrigo.vagasOcupadas * 100 / abrigo.capacidadeMaxima > 60} ? 'bg-warning' : 'bg-success')">
+                                        </div>
+                                    </div>
+                                    <small class="text-muted"
+                                           th:text="${#numbers.formatDecimal(abrigo.vagasOcupadas * 100 / abrigo.capacidadeMaxima, 1, 1)} + '%'">0%</small>
+                                </td>
+                                <td>
+                                    <span th:text="${abrigo.vagasOcupadas}">0</span> /
+                                    <span th:text="${abrigo.capacidadeMaxima}">0</span>
+                                </td>
+                                <td th:text="${abrigo.responsavel ?: '-'}">-</td>
+                                <td>
+                                    <a th:href="@{/abrigos/{id}(id=${abrigo.id})}"
+                                       class="btn btn-outline-primary btn-sm">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>

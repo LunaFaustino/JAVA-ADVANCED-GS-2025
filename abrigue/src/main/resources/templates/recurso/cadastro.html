@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-box me-2"></i>
+            <span th:text="${recurso.id != null ? 'Editar Recurso' : 'Novo Recurso'}">Novo Recurso</span>
+        </h2>
+        <a href="/recursos" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Voltar
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <form th:action="@{/recursos}" th:object="${recurso}" method="post">
+                        <input type="hidden" th:field="*{id}">
+
+                        <div class="row">
+                            <div class="col-md-8 mb-3">
+                                <label for="nome" class="form-label">Nome do Recurso *</label>
+                                <input type="text" class="form-control" id="nome" th:field="*{nome}"
+                                       th:classappend="${#fields.hasErrors('nome')} ? 'is-invalid' : ''"
+                                       placeholder="Ex: Cesta Básica, Remédio, etc.">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('nome')}"
+                                     th:errors="*{nome}"></div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="quantidade" class="form-label">Quantidade *</label>
+                                <input type="number" class="form-control" id="quantidade" th:field="*{quantidade}"
+                                       th:classappend="${#fields.hasErrors('quantidade')} ? 'is-invalid' : ''"
+                                       placeholder="Ex: 50" min="0">
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('quantidade')}"
+                                     th:errors="*{quantidade}"></div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="tipo" class="form-label">Tipo *</label>
+                                <select class="form-select" id="tipo" th:field="*{tipo}"
+                                        th:classappend="${#fields.hasErrors('tipo')} ? 'is-invalid' : ''">
+                                    <option value="">Selecione o tipo</option>
+                                    <option th:each="tipo : ${tipoOptions}"
+                                            th:value="${tipo}"
+                                            th:text="${tipo.descricao}">Tipo</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('tipo')}"
+                                     th:errors="*{tipo}"></div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="abrigo" class="form-label">Abrigo *</label>
+                                <select class="form-select" id="abrigo" th:field="*{abrigo.id}"
+                                        th:classappend="${#fields.hasErrors('abrigo')} ? 'is-invalid' : ''">
+                                    <option value="">Selecione o abrigo</option>
+                                    <option th:each="abrigo : ${abrigos}"
+                                            th:value="${abrigo.id}"
+                                            th:text="${abrigo.nome}">Abrigo</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('abrigo')}"
+                                     th:errors="*{abrigo}"></div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label">Descrição</label>
+                            <textarea class="form-control" id="descricao" th:field="*{descricao}" rows="3"
+                                      placeholder="Descrição adicional do recurso (opcional)"></textarea>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="/recursos" class="btn btn-outline-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>
+                                <span th:text="${recurso.id != null ? 'Atualizar' : 'Cadastrar'}">Cadastrar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>
