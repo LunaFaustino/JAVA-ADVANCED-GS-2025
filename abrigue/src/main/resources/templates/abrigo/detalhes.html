@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/base :: head">
+    <title th:text="${abrigo.nome + ' - Detalhes'}">Detalhes do Abrigo</title>
+</head>
+<body class="bg-light">
+<div th:replace="layout/base :: body">
+    <div th:fragment="content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>
+                <i class="fas fa-building me-2"></i>
+                <span th:text="${abrigo.nome}">Nome do Abrigo</span>
+            </h2>
+            <div>
+                <a th:href="@{/abrigos/{id}/editar(id=${abrigo.id})}" class="btn btn-outline-primary me-2">
+                    <i class="fas fa-edit me-2"></i>Editar
+                </a>
+                <a href="/abrigos" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Voltar
+                </a>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="display-4 text-primary mb-2" th:text="${abrigo.capacidadeMaxima}">0</div>
+                        <h6 class="card-title text-muted">Capacidade Total</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="display-4 text-warning mb-2" th:text="${abrigo.vagasOcupadas}">0</div>
+                        <h6 class="card-title text-muted">Vagas Ocupadas</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="display-4 text-success mb-2" th:text="${vagasDisponiveis}">0</div>
+                        <h6 class="card-title text-muted">Vagas Disponíveis</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <div class="display-4 mb-2"
+                             th:classappend="${percentualOcupacao > 80} ? 'text-danger' :
+                                               (${percentualOcupacao > 60} ? 'text-warning' : 'text-info')"
+                             th:text="${#numbers.formatDecimal(percentualOcupacao, 1, 1)} + '%'">0%</div>
+                        <h6 class="card-title text-muted">Taxa de Ocupação</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-chart-pie me-2"></i>Ocupação do Abrigo
+                        </h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <canvas id="graficoOcupacao" width="300" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-info-circle me-2"></i>Informações Gerais
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Status:</strong></div>
+                            <div class="col-sm-8">
+                                    <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                                 (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
+                                          th:text="${abrigo.status.descricao}">Status</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-sm-4"><strong>Endereço:</strong></div>
+                            <div class="col-sm-8" th:text="${abrigo.endereco}">Endereço</div>
+                        </div>
+
+                        <div class="row mb-3" th:if="${abrigo.responsavel}">
+                            <div class="col-sm-4"><strong>Responsável:</strong></div>
+                            <div class="col-sm-8" th:text="${abrigo.responsavel}">Responsável</div>
+                        </div>
+
+                        <div class="row mb-3" th:if="${abrigo.telefone}">
+                            <div class="col-sm-4"><strong>Telefone:</strong></div>
+                            <div class="col-sm-8" th:text="${abrigo.telefone}">Telefone</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bolt me-2"></i>Ações Rápidas
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/pessoas/novo?abrigoId={id}(id=${abrigo.id})}"
+                                   class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-user-plus fa-2x mb-2 d-block"></i>
+                                    Cadastrar Pessoa
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/pessoas?abrigoId={id}(id=${abrigo.id})}"
+                                   class="btn btn-outline-info w-100">
+                                    <i class="fas fa-users fa-2x mb-2 d-block"></i>
+                                    Ver Pessoas
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/recursos/novo?abrigoId={id}(id=${abrigo.id})}"
+                                   class="btn btn-outline-success w-100">
+                                    <i class="fas fa-plus-square fa-2x mb-2 d-block"></i>
+                                    Adicionar Recurso
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/recursos?abrigoId={id}(id=${abrigo.id})}"
+                                   class="btn btn-outline-warning w-100">
+                                    <i class="fas fa-boxes fa-2x mb-2 d-block"></i>
+                                    Ver Recursos
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('graficoOcupacao').getContext('2d');
+
+        const vagasOcupadas = /*[[${abrigo.vagasOcupadas}]]*/ 0;
+        const vagasDisponiveis = /*[[${vagasDisponiveis}]]*/ 0;
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Vagas Ocupadas', 'Vagas Disponíveis'],
+                datasets: [{
+                    data: [vagasOcupadas, vagasDisponiveis],
+                    backgroundColor: [
+                        vagasOcupadas / (vagasOcupadas + vagasDisponiveis) > 0.8 ? '#dc3545' :
+                            vagasOcupadas / (vagasOcupadas + vagasDisponiveis) > 0.6 ? '#ffc107' : '#fd7e14',
+                        '#28a745'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>
