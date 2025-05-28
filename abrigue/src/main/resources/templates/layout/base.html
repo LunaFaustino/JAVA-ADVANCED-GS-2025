@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:fragment="layout (content)">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:fragment="layout (content)">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,6 +31,8 @@
         .sidebar {
             min-height: 100vh;
             background: linear-gradient(135deg, var(--cor-escura-1) 0%, var(--cor-escura-2) 100%);
+            display: flex;
+            flex-direction: column;
         }
 
         .navbar-brand {
@@ -204,7 +208,6 @@
             font-size: 0.8em;
         }
 
-        /* Customização específica para diferentes porcentagens de ocupação */
         .ocupacao-baixa {
             color: var(--cor-verde-suave) !important;
         }
@@ -217,7 +220,6 @@
             color: #ef5350 !important;
         }
 
-        /* Estilo para cards de estatísticas */
         .card.border-primary .card-body {
             background: linear-gradient(135deg, rgba(246, 107, 14, 0.1) 0%, rgba(246, 107, 14, 0.05) 100%);
         }
@@ -233,6 +235,34 @@
         .card.border-success .card-body {
             background: linear-gradient(135deg, rgba(195, 191, 149, 0.1) 0%, rgba(195, 191, 149, 0.05) 100%);
         }
+
+        .user-info {
+            border-top: 1px solid rgba(255,255,255,0.1) !important;
+            padding-top: 1rem;
+            margin-top: auto;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .btn-logout {
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -245,6 +275,11 @@
                     Abrigue-se
                 </div>
                 <ul class="nav flex-column">
+                    <li class="nav-item mb-2">
+                        <a class="nav-link" href="/profile">
+                            <i class="fas fa-user me-2"></i>Meu Perfil
+                        </a>
+                    </li>
                     <li class="nav-item mb-2">
                         <a class="nav-link" href="/dashboard">
                             <i class="fas fa-chart-bar me-2"></i>
@@ -270,6 +305,24 @@
                         </a>
                     </li>
                 </ul>
+
+                <div class="user-info">
+                    <div class="d-flex align-items-center mb-2" sec:authorize="isAuthenticated()">
+                        <img sec:authentication="principal.attributes['avatar_url']"
+                             class="user-avatar rounded-circle me-2"
+                             alt="Avatar">
+                        <div>
+                            <div class="text-white small" sec:authentication="principal.attributes['name']">Nome</div>
+                            <div class="text-white-50 small" sec:authentication="principal.attributes['email']">Email</div>
+                        </div>
+                    </div>
+                    <form action="/logout" method="post" class="d-grid">
+                        <button type="submit" class="btn btn-logout">
+                            <i class="fas fa-sign-out-alt me-2"></i>Sair
+                        </button>
+                    </form>
+                </div>
+
             </nav>
         </div>
 
