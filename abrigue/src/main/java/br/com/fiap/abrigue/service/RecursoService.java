@@ -13,9 +13,12 @@ import java.util.Optional;
 public class RecursoService {
 
     private final RecursoRepository recursoRepository;
+    private final MessagePublisherService messagePublisherService; // Nova dependência
 
-    public RecursoService(RecursoRepository recursoRepository) {
+    public RecursoService(RecursoRepository recursoRepository,
+                          MessagePublisherService messagePublisherService) {
         this.recursoRepository = recursoRepository;
+        this.messagePublisherService = messagePublisherService;
     }
 
     public List<Recurso> listarTodos() {
@@ -31,8 +34,21 @@ public class RecursoService {
     }
 
     public Recurso salvar(Recurso recurso) {
+        Integer quantidadeAnterior = null;
+
+        if (recurso.getId() != null) {
+            Optional<Recurso> recursoExistente = buscarPorId(recurso.getId());
+            if (recursoExistente.isPresent()) {
+                quantidadeAnterior = recursoExistente.get().getQuantidade();
+            }
+        }
+
         recurso.setDataAtualizacao(new Date());
-        return recursoRepository.save(recurso);
+        Recurso recursoSalvo = recursoRepository.save(recurso);
+
+        verificarEstoqueBaixo(recursoSalvo, quantidadeAnterior);
+
+        return recursoSalvo;
     }
 
     public void deletar(Long id) {
@@ -61,5 +77,63 @@ public class RecursoService {
 
     public int getTotalRecursosPorAbrigo(Long abrigoId) {
         return listarPorAbrigo(abrigoId).size();
+    }
+
+    private void verificarEstoqueBaixo(Recurso recurso, Integer quantidadeAnterior) {
+        try {
+            boolean estoqueAtualBaixo = isEstoqueBaixo(recurso);
+            boolean estoqueAnteriorBaixo = quantidadeAnterior != null && quantidadeAnterior <= 10;
+
+            if (estoqueAtualBaixo && (quantidadeAnterior == null || !estoqueAnteriorBaixo)) {
+                messagePublisherService.enviarMensagemRecursoEstoqueBaixo(recurso);
+            }
+
+            if (recurso.getQuantidade() <= 3) {
+                var alertaCritico = new java.util.HashMap<String, Object>();
+                alertaCritico.put("tipo", "CRITICO");
+                alertaCritico.put("recursoId", recurso.getId());
+                alertaCritico.put("nomeRecurso", recurso.getNome());
+                alertaCritico.put("quantidade", recurso.getQuantidade());
+                alertaCritico.put("mensagem", "ESTOQUE CRÍTICO - AÇÃO URGENTE NECESSÁRIA");
+
+                messagePublisherService.enviarMensagem("alertas.criticos.queue", alertaCritico);
+            }
+
+        } catch (Exception e) {
+            System.err.println("Erro ao verificar estoque baixo: " + e.getMessage());
+        }
+    }
+
+    public Recurso adicionarQuantidade(Long recursoId, Integer quantidadeAdicional) {
+        Optional<Recurso> recursoOpt = buscarPorId(recursoId);
+
+        if (recursoOpt.isPresent()) {
+            Recurso recurso = recursoOpt.get();
+            Integer quantidadeAnterior = recurso.getQuantidade();
+
+            recurso.setQuantidade(recurso.getQuantidade() + quantidadeAdicional);
+
+            return salvar(recurso);
+        }
+
+        throw new RuntimeException("Recurso não encontrado com ID: " + recursoId);
+    }
+
+    public Recurso removerQuantidade(Long recursoId, Integer quantidadeRemover) {
+        Optional<Recurso> recursoOpt = buscarPorId(recursoId);
+
+        if (recursoOpt.isPresent()) {
+            Recurso recurso = recursoOpt.get();
+
+            if (recurso.getQuantidade() >= quantidadeRemover) {
+                recurso.setQuantidade(recurso.getQuantidade() - quantidadeRemover);
+                return salvar(recurso);
+            } else {
+                throw new RuntimeException("Quantidade insuficiente em estoque. Disponível: " +
+                        recurso.getQuantidade() + ", Solicitado: " + quantidadeRemover);
+            }
+        }
+
+        throw new RuntimeException("Recurso não encontrado com ID: " + recursoId);
     }
 }

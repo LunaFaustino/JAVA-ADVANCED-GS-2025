@@ -14,12 +14,15 @@ import java.util.Optional;
 public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
-
     private final AbrigoService abrigoService;
+    private final MessagePublisherService messagePublisherService; // Nova dependência
 
-    public PessoaService(PessoaRepository pessoaRepository, AbrigoService abrigoService) {
+    public PessoaService(PessoaRepository pessoaRepository,
+                         AbrigoService abrigoService,
+                         MessagePublisherService messagePublisherService) {
         this.pessoaRepository = pessoaRepository;
         this.abrigoService = abrigoService;
+        this.messagePublisherService = messagePublisherService;
     }
 
     public List<Pessoa> listarTodas() {
@@ -39,6 +42,7 @@ public class PessoaService {
     }
 
     public Pessoa salvar(Pessoa pessoa) {
+        boolean isNovaPessoa = pessoa.getId() == null; // Verifica se é uma nova pessoa
 
         if (pessoa.getDataEntrada() == null) {
             pessoa.setDataEntrada(new Date());
@@ -52,6 +56,14 @@ public class PessoaService {
 
         if (pessoaSalva.getAbrigo() != null) {
             atualizarVagasAbrigo(pessoaSalva.getAbrigo().getId());
+        }
+
+        if (isNovaPessoa) {
+            try {
+                messagePublisherService.enviarMensagemPessoaCadastrada(pessoaSalva);
+            } catch (Exception e) {
+                System.err.println("Erro ao enviar mensagem para RabbitMQ: " + e.getMessage());
+            }
         }
 
         return pessoaSalva;
