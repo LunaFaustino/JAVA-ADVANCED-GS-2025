@@ -42,8 +42,6 @@ public class PessoaService {
     }
 
     public Pessoa salvar(Pessoa pessoa) {
-        boolean isNovaPessoa = pessoa.getId() == null; // Verifica se é uma nova pessoa
-
         if (pessoa.getDataEntrada() == null) {
             pessoa.setDataEntrada(new Date());
         }
@@ -56,14 +54,6 @@ public class PessoaService {
 
         if (pessoaSalva.getAbrigo() != null) {
             atualizarVagasAbrigo(pessoaSalva.getAbrigo().getId());
-        }
-
-        if (isNovaPessoa) {
-            try {
-                messagePublisherService.enviarMensagemPessoaCadastrada(pessoaSalva);
-            } catch (Exception e) {
-                System.err.println("Erro ao enviar mensagem para RabbitMQ: " + e.getMessage());
-            }
         }
 
         return pessoaSalva;

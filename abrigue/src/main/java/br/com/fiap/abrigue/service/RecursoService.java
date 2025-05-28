@@ -1,5 +1,6 @@
 package br.com.fiap.abrigue.service;
 
+import br.com.fiap.abrigue.config.RabbitMQConfig;
 import br.com.fiap.abrigue.model.entity.Recurso;
 import br.com.fiap.abrigue.model.enums.TipoRecurso;
 import br.com.fiap.abrigue.repository.RecursoRepository;
@@ -96,7 +97,7 @@ public class RecursoService {
                 alertaCritico.put("quantidade", recurso.getQuantidade());
                 alertaCritico.put("mensagem", "ESTOQUE CRÍTICO - AÇÃO URGENTE NECESSÁRIA");
 
-                messagePublisherService.enviarMensagem("alertas.criticos.queue", alertaCritico);
+                messagePublisherService.enviarMensagem(RabbitMQConfig.ALERTAS_CRITICOS_QUEUE, alertaCritico);
             }
 
         } catch (Exception e) {

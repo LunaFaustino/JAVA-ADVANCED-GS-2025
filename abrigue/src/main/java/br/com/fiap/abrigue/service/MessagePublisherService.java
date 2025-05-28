@@ -1,7 +1,8 @@
 package br.com.fiap.abrigue.service;
 
 import br.com.fiap.abrigue.config.RabbitMQConfig;
-import br.com.fiap.abrigue.dto.PessoaCadastradaMessage;
+import br.com.fiap.abrigue.dto.AbrigoCapacidadeBaixaMessage;
+import br.com.fiap.abrigue.model.entity.Abrigo;
 import br.com.fiap.abrigue.model.entity.Pessoa;
 import br.com.fiap.abrigue.model.entity.Recurso;
 import org.slf4j.Logger;
@@ -20,23 +21,25 @@ public class MessagePublisherService {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-    public void enviarMensagemPessoaCadastrada(Pessoa pessoa) {
+    public void enviarMensagemAbrigoCapacidadeBaixa(Abrigo abrigo) {
         try {
-            PessoaCadastradaMessage message = new PessoaCadastradaMessage(
-                    pessoa.getId(),
-                    pessoa.getNome(),
-                    pessoa.getCpf(),
-                    pessoa.getAbrigo() != null ? pessoa.getAbrigo().getId() : null,
-                    pessoa.getAbrigo() != null ? pessoa.getAbrigo().getNome() : null
+            AbrigoCapacidadeBaixaMessage message = new AbrigoCapacidadeBaixaMessage(
+                    abrigo.getId(),
+                    abrigo.getNome(),
+                    abrigo.getEndereco(),
+                    abrigo.getCapacidadeMaxima(),
+                    abrigo.getVagasOcupadas(),
+                    abrigo.getResponsavel(),
+                    abrigo.getTelefone()
             );
 
-            rabbitTemplate.convertAndSend(RabbitMQConfig.PESSOA_CADASTRADA_QUEUE, message);
+            rabbitTemplate.convertAndSend(RabbitMQConfig.ABRIGO_CAPACIDADE_BAIXA_QUEUE, message);
 
             logger.info("Mensagem enviada para fila {}: {}",
-                    RabbitMQConfig.PESSOA_CADASTRADA_QUEUE, message);
+                    RabbitMQConfig.ABRIGO_CAPACIDADE_BAIXA_QUEUE, message);
 
         } catch (Exception e) {
-            logger.error("Erro ao enviar mensagem de pessoa cadastrada: {}", e.getMessage(), e);
+            logger.error("Erro ao enviar mensagem de abrigo com capacidade baixa: {}", e.getMessage(), e);
         }
     }
 
