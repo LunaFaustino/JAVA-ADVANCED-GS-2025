@@ -1,140 +1,36 @@
 package br.com.fiap.abrigue.service;
 
-import br.com.fiap.abrigue.config.RabbitMQConfig;
 import br.com.fiap.abrigue.model.entity.Recurso;
 import br.com.fiap.abrigue.model.enums.TipoRecurso;
-import br.com.fiap.abrigue.repository.RecursoRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class RecursoService {
+public interface RecursoService {
 
-    private final RecursoRepository recursoRepository;
-    private final MessagePublisherService messagePublisherService; // Nova dependência
+    List<Recurso> listarTodos();
 
-    public RecursoService(RecursoRepository recursoRepository,
-                          MessagePublisherService messagePublisherService) {
-        this.recursoRepository = recursoRepository;
-        this.messagePublisherService = messagePublisherService;
-    }
+    List<Recurso> listarPorAbrigo(Long abrigoId);
 
-    public List<Recurso> listarTodos() {
-        return recursoRepository.findAll();
-    }
+    Optional<Recurso> buscarPorId(Long id);
 
-    public List<Recurso> listarPorAbrigo(Long abrigoId) {
-        return recursoRepository.findByAbrigoId(abrigoId);
-    }
+    Recurso salvar(Recurso recurso);
 
-    public Optional<Recurso> buscarPorId(Long id) {
-        return recursoRepository.findById(id);
-    }
+    void deletar(Long id);
 
-    public Recurso salvar(Recurso recurso) {
-        Integer quantidadeAnterior = null;
+    List<Recurso> buscarPorNome(String nome);
 
-        if (recurso.getId() != null) {
-            Optional<Recurso> recursoExistente = buscarPorId(recurso.getId());
-            if (recursoExistente.isPresent()) {
-                quantidadeAnterior = recursoExistente.get().getQuantidade();
-            }
-        }
+    List<Recurso> listarPorTipo(TipoRecurso tipo);
 
-        recurso.setDataAtualizacao(new Date());
-        Recurso recursoSalvo = recursoRepository.save(recurso);
+    List<Recurso> listarRecursosComEstoqueBaixo();
 
-        verificarEstoqueBaixo(recursoSalvo, quantidadeAnterior);
+    List<Recurso> listarPorAbrigoETipo(Long abrigoId, TipoRecurso tipo);
 
-        return recursoSalvo;
-    }
+    boolean isEstoqueBaixo(Recurso recurso);
 
-    public void deletar(Long id) {
-        recursoRepository.deleteById(id);
-    }
+    int getTotalRecursosPorAbrigo(Long abrigoId);
 
-    public List<Recurso> buscarPorNome(String nome) {
-        return recursoRepository.findByNomeContainingIgnoreCase(nome);
-    }
+    Recurso adicionarQuantidade(Long recursoId, Integer quantidadeAdicional);
 
-    public List<Recurso> listarPorTipo(TipoRecurso tipo) {
-        return recursoRepository.findByTipo(tipo);
-    }
-
-    public List<Recurso> listarRecursosComEstoqueBaixo() {
-        return recursoRepository.findRecursosComEstoqueBaixo();
-    }
-
-    public List<Recurso> listarPorAbrigoETipo(Long abrigoId, TipoRecurso tipo) {
-        return recursoRepository.findByAbrigoIdAndTipo(abrigoId, tipo);
-    }
-
-    public boolean isEstoqueBaixo(Recurso recurso) {
-        return recurso.getQuantidade() <= 10;
-    }
-
-    public int getTotalRecursosPorAbrigo(Long abrigoId) {
-        return listarPorAbrigo(abrigoId).size();
-    }
-
-    private void verificarEstoqueBaixo(Recurso recurso, Integer quantidadeAnterior) {
-        try {
-            boolean estoqueAtualBaixo = isEstoqueBaixo(recurso);
-            boolean estoqueAnteriorBaixo = quantidadeAnterior != null && quantidadeAnterior <= 10;
-
-            if (estoqueAtualBaixo && (quantidadeAnterior == null || !estoqueAnteriorBaixo)) {
-                messagePublisherService.enviarMensagemRecursoEstoqueBaixo(recurso);
-            }
-
-            if (recurso.getQuantidade() <= 3) {
-                var alertaCritico = new java.util.HashMap<String, Object>();
-                alertaCritico.put("tipo", "CRITICO");
-                alertaCritico.put("recursoId", recurso.getId());
-                alertaCritico.put("nomeRecurso", recurso.getNome());
-                alertaCritico.put("quantidade", recurso.getQuantidade());
-                alertaCritico.put("mensagem", "ESTOQUE CRÍTICO - AÇÃO URGENTE NECESSÁRIA");
-
-                messagePublisherService.enviarMensagem(RabbitMQConfig.ALERTAS_CRITICOS_QUEUE, alertaCritico);
-            }
-
-        } catch (Exception e) {
-            System.err.println("Erro ao verificar estoque baixo: " + e.getMessage());
-        }
-    }
-
-    public Recurso adicionarQuantidade(Long recursoId, Integer quantidadeAdicional) {
-        Optional<Recurso> recursoOpt = buscarPorId(recursoId);
-
-        if (recursoOpt.isPresent()) {
-            Recurso recurso = recursoOpt.get();
-            Integer quantidadeAnterior = recurso.getQuantidade();
-
-            recurso.setQuantidade(recurso.getQuantidade() + quantidadeAdicional);
-
-            return salvar(recurso);
-        }
-
-        throw new RuntimeException("Recurso não encontrado com ID: " + recursoId);
-    }
-
-    public Recurso removerQuantidade(Long recursoId, Integer quantidadeRemover) {
-        Optional<Recurso> recursoOpt = buscarPorId(recursoId);
-
-        if (recursoOpt.isPresent()) {
-            Recurso recurso = recursoOpt.get();
-
-            if (recurso.getQuantidade() >= quantidadeRemover) {
-                recurso.setQuantidade(recurso.getQuantidade() - quantidadeRemover);
-                return salvar(recurso);
-            } else {
-                throw new RuntimeException("Quantidade insuficiente em estoque. Disponível: " +
-                        recurso.getQuantidade() + ", Solicitado: " + quantidadeRemover);
-            }
-        }
-
-        throw new RuntimeException("Recurso não encontrado com ID: " + recursoId);
-    }
+    Recurso removerQuantidade(Long recursoId, Integer quantidadeRemover);
 }
