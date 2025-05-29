@@ -30,6 +30,7 @@
 
         .sidebar {
             min-height: 100vh;
+            max-height: 100%;
             background: linear-gradient(135deg, var(--cor-escura-1) 0%, var(--cor-escura-2) 100%);
             display: flex;
             flex-direction: column;
@@ -312,17 +313,21 @@
                     </li>
                 </ul>
 
-                <div class="user-info">
-                    <div class="d-flex align-items-center mb-2" sec:authorize="isAuthenticated()">
-                        <img sec:authentication="principal.attributes['avatar_url']"
-                             class="user-avatar rounded-circle me-2"
-                             alt="Avatar">
-                        <div>
-                            <div class="text-white small" sec:authentication="principal.attributes['name']">Nome</div>
-                            <div class="text-white-50 small" sec:authentication="principal.attributes['email']">Email</div>
+                <div class="user-info" sec:authorize="isAuthenticated()">
+                    <div class="d-flex align-items-center mb-2">
+
+                        <div class="user-avatar-fallback me-2" style="display: none;">
+                            <i class="fas fa-user"></i>
+                        </div>
+
+                        <div class="flex-grow-1">
+                            <div class="text-white small fw-bold"
+                                 sec:authentication="principal.attributes['name']"
+                                 th:text="${#authentication.principal.attributes['name'] ?: 'Usuário'}">Nome</div>
                         </div>
                     </div>
-                    <form action="/logout" method="post" class="d-grid">
+
+                    <form action="/logout" method="post">
                         <button type="submit" class="btn btn-logout">
                             <i class="fas fa-sign-out-alt me-2"></i>Sair
                         </button>
