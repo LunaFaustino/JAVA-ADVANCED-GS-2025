@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-robot me-2"></i>Assistente de Análise IA
+        </h2>
+        <a href="/dashboard" class="btn btn-outline-secondary">
+            <i class="fas fa-home me-2"></i>Dashboard
+        </a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <div class="d-flex align-items-start">
+                    <i class="fas fa-info-circle me-3 mt-1"></i>
+                    <div>
+                        <strong>Sobre o Assistente IA</strong>
+                        <p class="mb-0 mt-1">
+                            Este assistente utiliza inteligência artificial para analisar os dados dos abrigos,
+                            pessoas e recursos, fornecendo insights e recomendações para otimizar a gestão.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-building me-2"></i>Análise Individual de Abrigo
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Analise detalhadamente um abrigo específico, incluindo ocupação,
+                        recursos disponíveis e recomendações personalizadas.
+                    </p>
+
+                    <form method="post" action="/assistente/analisar-abrigo">
+                        <div class="mb-3">
+                            <label for="abrigoId" class="form-label">Selecione o Abrigo:</label>
+                            <select class="form-select" id="abrigoId" name="abrigoId" required>
+                                <option value="">Escolha um abrigo...</option>
+                                <option th:each="abrigo : ${abrigos}"
+                                        th:value="${abrigo.id}"
+                                        th:text="${abrigo.nome} + ' (' + ${abrigo.vagasOcupadas} + '/' + ${abrigo.capacidadeMaxima} + ' vagas)'">
+                                    Abrigo
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid" th:if="${!#lists.isEmpty(abrigos)}">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search me-2"></i>Analisar Abrigo
+                            </button>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(abrigos)}" class="text-center">
+                            <p class="text-muted mb-3">Nenhum abrigo cadastrado</p>
+                            <a href="/abrigos/novo" class="btn btn-outline-primary">
+                                <i class="fas fa-plus me-2"></i>Cadastrar Abrigo
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>Análise Geral do Sistema
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">
+                        Obtenha uma visão panorâmica de todo o sistema de abrigos,
+                        identificando prioridades e oportunidades de melhoria.
+                    </p>
+
+                    <div class="mb-3">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h5 text-primary mb-1" th:text="${#lists.size(abrigos)}">0</div>
+                                    <small class="text-muted">Abrigos</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h5 text-info mb-1"
+                                         th:text="${totalCapacidade}">0</div>
+                                    <small class="text-muted">Capacidade</small>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="border rounded p-2">
+                                    <div class="h5 text-warning mb-1"
+                                         th:text="${totalOcupadas}">0</div>
+                                    <small class="text-muted">Ocupadas</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post" action="/assistente/analisar-geral">
+                        <div class="d-grid" th:if="${!#lists.isEmpty(abrigos)}">
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-chart-bar me-2"></i>Analisar Sistema
+                            </button>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(abrigos)}" class="text-center">
+                            <p class="text-muted">Sistema sem dados para análise</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-lightbulb me-2"></i>Como Funciona a Análise
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-database fa-2x text-primary mb-2"></i>
+                                <h6>1. Coleta de Dados</h6>
+                                <small class="text-muted">
+                                    O sistema coleta informações sobre abrigos, pessoas abrigadas e recursos disponíveis.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-brain fa-2x text-success mb-2"></i>
+                                <h6>2. Análise IA</h6>
+                                <small class="text-muted">
+                                    A inteligência artificial processa os dados e identifica padrões, problemas e oportunidades.
+                                </small>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-clipboard-list fa-2x text-warning mb-2"></i>
+                                <h6>3. Recomendações</h6>
+                                <small class="text-muted">
+                                    Receba insights práticos e acionáveis para melhorar a gestão dos abrigos.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+</html>

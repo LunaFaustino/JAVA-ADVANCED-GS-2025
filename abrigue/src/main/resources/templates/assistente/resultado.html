@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org" th:replace="~{layout/base :: layout(~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="fas fa-robot me-2"></i>
+            <span th:if="${tipoAnalise == 'individual'}" th:text="'Análise IA - ' + ${abrigo.nome}">Análise Individual</span>
+            <span th:if="${tipoAnalise == 'geral'}">Análise IA - Panorama Geral</span>
+        </h2>
+        <div>
+            <button onclick="window.print()" class="btn btn-outline-info me-2">
+                <i class="fas fa-print me-2"></i>Imprimir
+            </button>
+            <a href="/assistente" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-2"></i>Nova Análise
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${tipoAnalise == 'individual' && abrigo != null}" class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-building me-2"></i>Informações do Abrigo
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Nome:</strong> <span th:text="${abrigo.nome}">Nome</span></p>
+                            <p><strong>Endereço:</strong> <span th:text="${abrigo.endereco}">Endereço</span></p>
+                            <p><strong>Status:</strong>
+                                <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                             (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
+                                      th:text="${abrigo.status.descricao}">Status</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row text-center">
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="h5 text-primary mb-1" th:text="${abrigo.capacidadeMaxima}">0</div>
+                                        <small class="text-muted">Capacidade</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="h5 text-warning mb-1" th:text="${abrigo.vagasOcupadas}">0</div>
+                                        <small class="text-muted">Ocupadas</small>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="border rounded p-2">
+                                        <div class="h5 text-success mb-1"
+                                             th:text="${abrigo.capacidadeMaxima - abrigo.vagasOcupadas}">0</div>
+                                        <small class="text-muted">Disponíveis</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-brain me-2"></i>Análise e Recomendações da IA
+                    </h5>
+                    <span class="badge bg-primary">
+                        <i class="fas fa-sparkles me-1"></i>Powered by AI
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-4">
+                        <div class="d-flex align-items-start">
+                            <i class="fas fa-info-circle me-3 mt-1"></i>
+                            <div>
+                                <strong>Análise Gerada por IA</strong>
+                                <p class="mb-0 mt-1">
+                                    Esta análise foi gerada automaticamente por inteligência artificial baseada nos dados atuais do sistema.
+                                    As recomendações devem ser avaliadas pelo gestor responsável.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="analysis-content">
+                        <div th:utext="${#strings.replace(#strings.escapeXml(analise), '&#10;', '<br>')}"
+                             style="white-space: pre-wrap; line-height: 1.6;">
+                            Análise da IA aparecerá aqui...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>Ações Sugeridas
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-3" th:if="${tipoAnalise == 'individual'}">
+                            <a th:href="@{/pessoas?abrigoId={id}(id=${abrigo.id})}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-users fa-2x mb-2 d-block"></i>
+                                Gerenciar Pessoas
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3" th:if="${tipoAnalise == 'individual'}">
+                            <a th:href="@{/recursos?abrigoId={id}(id=${abrigo.id})}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-boxes fa-2x mb-2 d-block"></i>
+                                Gerenciar Recursos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/abrigos" class="btn btn-outline-info w-100">
+                                <i class="fas fa-building fa-2x mb-2 d-block"></i>
+                                Ver Todos Abrigos
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="/dashboard" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-chart-bar fa-2x mb-2 d-block"></i>
+                                Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-clock me-1"></i>
+                        Análise gerada em: <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm:ss')}">timestamp</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .analysis-content {
+            background-color: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            border-radius: 0.375rem;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .analysis-content h1, .analysis-content h2, .analysis-content h3 {
+            color: #212529;
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .analysis-content ul, .analysis-content ol {
+            padding-left: 1.5rem;
+        }
+
+        .analysis-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        @media print {
+            .btn, .card-header, .alert {
+                display: none !important;
+            }
+            .analysis-content {
+                background-color: white !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</th:block>
+
+</html>
