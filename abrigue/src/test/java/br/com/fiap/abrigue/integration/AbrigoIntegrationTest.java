@@ -1,5 +1,6 @@
 package br.com.fiap.abrigue.integration;
 
+import br.com.fiap.abrigue.config.TestConfig;
 import br.com.fiap.abrigue.model.entity.Abrigo;
 import br.com.fiap.abrigue.model.enums.StatusAbrigo;
 import br.com.fiap.abrigue.repository.AbrigoRepository;
@@ -7,6 +8,7 @@ import br.com.fiap.abrigue.service.AbrigoService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Import(TestConfig.class)
 @Transactional
 class AbrigoIntegrationTest {
 
@@ -105,11 +108,62 @@ class AbrigoIntegrationTest {
         abrigo.setNome("Abrigo que Ficará Lotado");
         abrigo.setEndereco("Rua Lotação, 999");
         abrigo.setCapacidadeMaxima(50);
-        abrigo.setVagasOcupadas(50); // Lotado
+        abrigo.setVagasOcupadas(50); // Lotado - 100% de ocupação
         abrigo.setStatus(StatusAbrigo.ATIVO);
 
         Abrigo abrigoSalvo = abrigoService.salvar(abrigo);
 
         assertEquals(StatusAbrigo.LOTADO, abrigoSalvo.getStatus());
+    }
+
+    @Test
+    void testListarAbrigosComVagas() {
+        Abrigo abrigoComVagas = new Abrigo();
+        abrigoComVagas.setNome("Abrigo com Vagas");
+        abrigoComVagas.setEndereco("Rua Disponível, 111");
+        abrigoComVagas.setCapacidadeMaxima(50);
+        abrigoComVagas.setVagasOcupadas(30);
+        abrigoComVagas.setStatus(StatusAbrigo.ATIVO);
+
+        Abrigo abrigoLotado = new Abrigo();
+        abrigoLotado.setNome("Abrigo Lotado");
+        abrigoLotado.setEndereco("Rua Cheia, 222");
+        abrigoLotado.setCapacidadeMaxima(20);
+        abrigoLotado.setVagasOcupadas(20);
+        abrigoLotado.setStatus(StatusAbrigo.ATIVO);
+
+        abrigoService.salvar(abrigoComVagas);
+        abrigoService.salvar(abrigoLotado);
+
+        List<Abrigo> abrigosComVagas = abrigoService.listarAbrigosComVagas();
+
+        assertEquals(1, abrigosComVagas.size());
+        assertEquals("Abrigo com Vagas", abrigosComVagas.get(0).getNome());
+    }
+
+    @Test
+    void testListarAbrigosAtivos() {
+        Abrigo abrigoAtivo = new Abrigo();
+        abrigoAtivo.setNome("Abrigo Ativo");
+        abrigoAtivo.setEndereco("Rua Ativa, 333");
+        abrigoAtivo.setCapacidadeMaxima(40);
+        abrigoAtivo.setVagasOcupadas(20);
+        abrigoAtivo.setStatus(StatusAbrigo.ATIVO);
+
+        Abrigo abrigoInativo = new Abrigo();
+        abrigoInativo.setNome("Abrigo Inativo");
+        abrigoInativo.setEndereco("Rua Inativa, 444");
+        abrigoInativo.setCapacidadeMaxima(30);
+        abrigoInativo.setVagasOcupadas(0);
+        abrigoInativo.setStatus(StatusAbrigo.INATIVO);
+
+        abrigoService.salvar(abrigoAtivo);
+        abrigoService.salvar(abrigoInativo);
+
+        List<Abrigo> abrigosAtivos = abrigoService.listarAtivos();
+
+        assertEquals(1, abrigosAtivos.size());
+        assertEquals("Abrigo Ativo", abrigosAtivos.get(0).getNome());
+        assertEquals(StatusAbrigo.ATIVO, abrigosAtivos.get(0).getStatus());
     }
 }

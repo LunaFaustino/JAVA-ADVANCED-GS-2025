@@ -7,9 +7,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @EnableRabbit
+@Profile("!test")
 public class RabbitMQConfig {
 
     public static final String ABRIGO_CAPACIDADE_BAIXA_QUEUE = "abrigo.capacidade.baixa.queue";
