@@ -5,20 +5,20 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>
       <i class="fas fa-users me-2"></i>
-      <span th:if="${abrigo != null}" th:text="'Pessoas - ' + ${abrigo.nome}">Pessoas do Abrigo</span>
-      <span th:unless="${abrigo != null}">Gerenciar Pessoas</span>
+      <span th:if="${abrigo != null}" th:text="#{pessoa.pessoas.abrigo} + ' - ' + ${abrigo.nome}">Pessoas do Abrigo</span>
+      <span th:unless="${abrigo != null}" th:text="#{pessoa.gerenciar}">Gerenciar Pessoas</span>
     </h2>
     <div>
       <a th:href="${abrigo != null ? '/pessoas/novo?abrigoId=' + abrigo.id : '/pessoas/novo'}"
          class="btn btn-primary me-2">
-        <i class="fas fa-plus me-2"></i>Nova Pessoa
+        <i class="fas fa-plus me-2"></i><span th:text="#{pessoa.nova}">Nova Pessoa</span>
       </a>
       <a th:if="${abrigo != null}" th:href="@{/abrigos/{id}(id=${abrigo.id})}"
          class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Voltar ao Abrigo
+        <i class="fas fa-arrow-left me-2"></i><span th:text="#{btn.voltar}">Voltar ao Abrigo</span>
       </a>
       <a th:unless="${abrigo != null}" href="/dashboard" class="btn btn-outline-secondary">
-        <i class="fas fa-home me-2"></i>Dashboard
+        <i class="fas fa-home me-2"></i><span th:text="#{nav.dashboard}">Dashboard</span>
       </a>
     </div>
   </div>
@@ -30,11 +30,11 @@
         <input type="hidden" name="abrigoId" th:value="${abrigo?.id}">
         <div class="col-md-10">
           <input type="text" class="form-control" name="busca"
-                 th:value="${busca}" placeholder="Buscar por nome da pessoa...">
+                 th:value="${busca}" th:placeholder="#{pessoa.buscar.placeholder}">
         </div>
         <div class="col-md-2">
           <button type="submit" class="btn btn-outline-primary w-100">
-            <i class="fas fa-search me-2"></i>Buscar
+            <i class="fas fa-search me-2"></i><span th:text="#{btn.buscar}">Buscar</span>
           </button>
         </div>
       </form>
@@ -47,9 +47,9 @@
       <div class="card text-center">
         <div class="card-body">
           <i class="fas fa-users fa-3x text-muted mb-3"></i>
-          <p class="text-muted">Nenhuma pessoa encontrada.</p>
+          <p class="text-muted" th:text="#{pessoa.nenhuma.encontrada}">Nenhuma pessoa encontrada.</p>
           <a th:href="${abrigo != null ? '/pessoas/novo?abrigoId=' + abrigo.id : '/pessoas/novo'}"
-             class="btn btn-primary">Cadastrar Primeira Pessoa</a>
+             class="btn btn-primary" th:text="#{pessoa.primeira.pessoa}">Cadastrar Primeira Pessoa</a>
         </div>
       </div>
     </div>
@@ -59,34 +59,40 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <h6 class="mb-0" th:text="${pessoa.nome}">Nome da Pessoa</h6>
           <span th:if="${pessoa.situacaoEspecial != null and pessoa.situacaoEspecial.name() != 'NENHUMA'}"
-                class="badge bg-warning text-dark"
-                th:text="${pessoa.situacaoEspecial.descricao}">Situação</span>
+                th:switch="${pessoa.situacaoEspecial.name()}" class="badge bg-warning text-dark">
+            <span th:case="'IDOSO'" th:text="#{situacao.idoso}">Idoso</span>
+            <span th:case="'DEFICIENCIA'" th:text="#{situacao.deficiente}">Deficiente</span>
+            <span th:case="'GESTANTE'" th:text="#{situacao.gestante}">Gestante</span>
+            <span th:case="'CRIANCA'" th:text="#{situacao.crianca}">Criança</span>
+            <span th:case="'DOENCA_CRONICA'" th:text="#{situacao.doenca_cronica}">Doença Crônica</span>
+            <span th:case="*" th:text="${pessoa.situacaoEspecial.descricao}">Situação</span>
+          </span>
         </div>
         <div class="card-body">
           <p class="card-text mb-2">
             <i class="fas fa-id-card me-2"></i>
-            <strong>CPF:</strong> <span th:text="${pessoa.cpf}">000.000.000-00</span>
+            <strong th:text="#{pessoa.cpf} + ':'">CPF:</strong> <span th:text="${pessoa.cpf}">000.000.000-00</span>
           </p>
 
           <p class="card-text mb-2" th:if="${pessoa.idade != null}">
             <i class="fas fa-birthday-cake me-2"></i>
-            <strong>Idade:</strong> <span th:text="${pessoa.idade}">0</span> anos
+            <strong th:text="#{pessoa.idade} + ':'">Idade:</strong> <span th:text="${pessoa.idade}">0</span> <span th:text="#{pessoa.anos}">anos</span>
           </p>
 
           <p class="card-text mb-2" th:if="${pessoa.telefone}">
             <i class="fas fa-phone me-2"></i>
-            <strong>Telefone:</strong> <span th:text="${pessoa.telefone}">-</span>
+            <strong th:text="#{pessoa.telefone} + ':'">Telefone:</strong> <span th:text="${pessoa.telefone}">-</span>
           </p>
 
           <p class="card-text mb-2" th:if="${pessoa.abrigo != null}">
             <i class="fas fa-building me-2"></i>
-            <strong>Abrigo:</strong> <span th:text="${pessoa.abrigo.nome}">-</span>
+            <strong th:text="#{pessoa.abrigo} + ':'">Abrigo:</strong> <span th:text="${pessoa.abrigo.nome}">-</span>
           </p>
 
           <p class="card-text" th:if="${pessoa.dataEntrada != null}">
             <small class="text-muted">
               <i class="fas fa-calendar me-1"></i>
-              Entrada: <span th:text="${#dates.format(pessoa.dataEntrada, 'dd/MM/yyyy HH:mm')}">-</span>
+              <span th:text="#{pessoa.data.entrada}">Entrada</span>: <span th:text="${#dates.format(pessoa.dataEntrada, 'dd/MM/yyyy HH:mm')}">-</span>
             </small>
           </p>
         </div>
@@ -94,13 +100,13 @@
           <div>
             <a th:href="@{/pessoas/{id}/editar(id=${pessoa.id})}"
                class="btn btn-outline-secondary btn-sm">
-              <i class="fas fa-edit me-1"></i>Editar
+              <i class="fas fa-edit me-1"></i><span th:text="#{btn.editar}">Editar</span>
             </a>
           </div>
           <form method="post" th:action="@{/pessoas/{id}/deletar(id=${pessoa.id})}"
-                class="d-inline" onsubmit="return confirm('Tem certeza que deseja remover esta pessoa?')">
+                class="d-inline" th:attr="onsubmit='return confirm(\'' + #{pessoa.confirmacao.remocao} + '\')'">
             <button type="submit" class="btn btn-outline-danger btn-sm">
-              <i class="fas fa-trash me-1"></i>Remover
+              <i class="fas fa-trash me-1"></i><span th:text="#{btn.remover}">Remover</span>
             </button>
           </form>
         </div>

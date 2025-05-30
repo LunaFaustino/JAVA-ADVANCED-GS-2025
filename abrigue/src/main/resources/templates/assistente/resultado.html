@@ -5,15 +5,15 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>
             <i class="fas fa-robot me-2"></i>
-            <span th:if="${tipoAnalise == 'individual'}" th:text="'Análise IA - ' + ${abrigo.nome}">Análise Individual</span>
-            <span th:if="${tipoAnalise == 'geral'}">Análise IA - Panorama Geral</span>
+            <span th:if="${tipoAnalise == 'individual'}" th:text="#{assistente.resultado.individual} + ${abrigo.nome}">Análise Individual</span>
+            <span th:if="${tipoAnalise == 'geral'}" th:text="#{assistente.resultado.geral}">Análise IA - Panorama Geral</span>
         </h2>
         <div>
             <button onclick="window.print()" class="btn btn-outline-info me-2">
-                <i class="fas fa-print me-2"></i>Imprimir
+                <i class="fas fa-print me-2"></i><span th:text="#{btn.imprimir}">Imprimir</span>
             </button>
             <a href="/assistente" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Nova Análise
+                <i class="fas fa-arrow-left me-2"></i><span th:text="#{btn.nova.analise}">Nova Análise</span>
             </a>
         </div>
     </div>
@@ -23,15 +23,15 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-building me-2"></i>Informações do Abrigo
+                        <i class="fas fa-building me-2"></i><span th:text="#{assistente.informacoes.abrigo}">Informações do Abrigo</span>
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <p><strong>Nome:</strong> <span th:text="${abrigo.nome}">Nome</span></p>
-                            <p><strong>Endereço:</strong> <span th:text="${abrigo.endereco}">Endereço</span></p>
-                            <p><strong>Status:</strong>
+                            <p><strong th:text="#{abrigo.nome} + ':'">Nome:</strong> <span th:text="${abrigo.nome}">Nome</span></p>
+                            <p><strong th:text="#{abrigo.endereco} + ':'">Endereço:</strong> <span th:text="${abrigo.endereco}">Endereço</span></p>
+                            <p><strong th:text="#{abrigo.status} + ':'">Status:</strong>
                                 <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
                                              (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
                                       th:text="${abrigo.status.descricao}">Status</span>
@@ -42,20 +42,20 @@
                                 <div class="col-4">
                                     <div class="border rounded p-2">
                                         <div class="h5 text-primary mb-1" th:text="${abrigo.capacidadeMaxima}">0</div>
-                                        <small class="text-muted">Capacidade</small>
+                                        <small class="text-muted" th:text="#{assistente.capacidade}">Capacidade</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="border rounded p-2">
                                         <div class="h5 text-warning mb-1" th:text="${abrigo.vagasOcupadas}">0</div>
-                                        <small class="text-muted">Ocupadas</small>
+                                        <small class="text-muted" th:text="#{assistente.ocupadas}">Ocupadas</small>
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="border rounded p-2">
                                         <div class="h5 text-success mb-1"
                                              th:text="${abrigo.capacidadeMaxima - abrigo.vagasOcupadas}">0</div>
-                                        <small class="text-muted">Disponíveis</small>
+                                        <small class="text-muted" th:text="#{assistente.disponiveis}">Disponíveis</small>
                                     </div>
                                 </div>
                             </div>
@@ -71,10 +71,10 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-brain me-2"></i>Análise e Recomendações da IA
+                        <i class="fas fa-brain me-2"></i><span th:text="#{assistente.analise.recomendacoes}">Análise e Recomendações da IA</span>
                     </h5>
                     <span class="badge bg-primary">
-                        <i class="fas fa-sparkles me-1"></i>Powered by AI
+                        <i class="fas fa-sparkles me-1"></i><span th:text="#{assistente.powered.ai}">Powered by AI</span>
                     </span>
                 </div>
                 <div class="card-body">
@@ -82,8 +82,8 @@
                         <div class="d-flex align-items-start">
                             <i class="fas fa-info-circle me-3 mt-1"></i>
                             <div>
-                                <strong>Análise Gerada por IA</strong>
-                                <p class="mb-0 mt-1">
+                                <strong th:text="#{assistente.analise.gerada}">Análise Gerada por IA</strong>
+                                <p class="mb-0 mt-1" th:text="#{assistente.analise.aviso}">
                                     Esta análise foi gerada automaticamente por inteligência artificial baseada nos dados atuais do sistema.
                                     As recomendações devem ser avaliadas pelo gestor responsável.
                                 </p>
@@ -107,7 +107,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-bolt me-2"></i>Ações Sugeridas
+                        <i class="fas fa-bolt me-2"></i><span th:text="#{assistente.acoes.sugeridas}">Ações Sugeridas</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -115,25 +115,25 @@
                         <div class="col-md-3 mb-3" th:if="${tipoAnalise == 'individual'}">
                             <a th:href="@{/pessoas?abrigoId={id}(id=${abrigo.id})}" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-users fa-2x mb-2 d-block"></i>
-                                Gerenciar Pessoas
+                                <span th:text="#{assistente.gerenciar.pessoas}">Gerenciar Pessoas</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3" th:if="${tipoAnalise == 'individual'}">
                             <a th:href="@{/recursos?abrigoId={id}(id=${abrigo.id})}" class="btn btn-outline-success w-100">
                                 <i class="fas fa-boxes fa-2x mb-2 d-block"></i>
-                                Gerenciar Recursos
+                                <span th:text="#{assistente.gerenciar.recursos}">Gerenciar Recursos</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="/abrigos" class="btn btn-outline-info w-100">
                                 <i class="fas fa-building fa-2x mb-2 d-block"></i>
-                                Ver Todos Abrigos
+                                <span th:text="#{assistente.ver.abrigos}">Ver Todos Abrigos</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="/dashboard" class="btn btn-outline-secondary w-100">
                                 <i class="fas fa-chart-bar fa-2x mb-2 d-block"></i>
-                                Dashboard
+                                <span th:text="#{nav.dashboard}">Dashboard</span>
                             </a>
                         </div>
                     </div>
@@ -148,7 +148,7 @@
                 <div class="card-body text-center">
                     <small class="text-muted">
                         <i class="fas fa-clock me-1"></i>
-                        Análise gerada em: <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm:ss')}">timestamp</span>
+                        <span th:text="#{assistente.analise.timestamp}">Análise gerada em:</span> <span th:text="${#dates.format(#dates.createNow(), 'dd/MM/yyyy HH:mm:ss')}">timestamp</span>
                     </small>
                 </div>
             </div>

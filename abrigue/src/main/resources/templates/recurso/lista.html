@@ -5,20 +5,20 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>
             <i class="fas fa-boxes me-2"></i>
-            <span th:if="${abrigo != null}" th:text="'Recursos - ' + ${abrigo.nome}">Recursos do Abrigo</span>
-            <span th:unless="${abrigo != null}">Gerenciar Recursos</span>
+            <span th:if="${abrigo != null}" th:text="#{recurso.recursos.abrigo} + ' - ' + ${abrigo.nome}">Recursos do Abrigo</span>
+            <span th:unless="${abrigo != null}" th:text="#{recurso.gerenciar}">Gerenciar Recursos</span>
         </h2>
         <div>
             <a th:href="${abrigo != null ? '/recursos/novo?abrigoId=' + abrigo.id : '/recursos/novo'}"
                class="btn btn-primary me-2">
-                <i class="fas fa-plus me-2"></i>Novo Recurso
+                <i class="fas fa-plus me-2"></i><span th:text="#{recurso.novo}">Novo Recurso</span>
             </a>
             <a th:if="${abrigo != null}" th:href="@{/abrigos/{id}(id=${abrigo.id})}"
                class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Voltar ao Abrigo
+                <i class="fas fa-arrow-left me-2"></i><span th:text="#{btn.voltar}">Voltar ao Abrigo</span>
             </a>
             <a th:unless="${abrigo != null}" href="/dashboard" class="btn btn-outline-secondary">
-                <i class="fas fa-home me-2"></i>Dashboard
+                <i class="fas fa-home me-2"></i><span th:text="#{nav.dashboard}">Dashboard</span>
             </a>
         </div>
     </div>
@@ -30,26 +30,34 @@
                 <input type="hidden" name="abrigoId" th:value="${abrigo?.id}">
                 <div class="col-md-5">
                     <input type="text" class="form-control" name="busca"
-                           th:value="${busca}" placeholder="Buscar por nome do recurso...">
+                           th:value="${busca}" th:placeholder="#{recurso.buscar.placeholder}">
                 </div>
                 <div class="col-md-3">
                     <select name="tipo" class="form-select">
-                        <option value="">Todos os tipos</option>
-                        <option th:each="tipo : ${tiposRecurso}"
-                                th:value="${tipo}"
-                                th:text="${tipo.descricao}"
-                                th:selected="${tipo == tipoFiltro}">Tipo</option>
+                        <option value="" th:text="#{recurso.todos.tipos}">Todos os tipos</option>
+                        <option th:each="tipo : ${tiposRecurso}" th:value="${tipo}" th:selected="${tipo == tipoFiltro}">
+                            <th:block th:switch="${tipo.name()}">
+                                <span th:case="'ALIMENTO'" th:text="#{tipo.alimento}">Alimento</span>
+                                <span th:case="'ROUPA'" th:text="#{tipo.roupa}">Roupa</span>
+                                <span th:case="'VESTUARIO'" th:text="#{tipo.vestuario}">Vestuário</span>
+                                <span th:case="'HIGIENE'" th:text="#{tipo.higiene}">Higiene</span>
+                                <span th:case="'MEDICAMENTO'" th:text="#{tipo.medicamento}">Medicamento</span>
+                                <span th:case="'MATERIAL_LIMPEZA'" th:text="#{tipo.material_limpeza}">Material de Limpeza</span>
+                                <span th:case="'OUTROS'" th:text="#{tipo.outros}">Outros</span>
+                                <span th:case="*" th:text="${tipo.descricao}">Tipo</span>
+                            </th:block>
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-search me-2"></i>Filtrar
+                        <i class="fas fa-search me-2"></i><span th:text="#{btn.filtrar}">Filtrar</span>
                     </button>
                 </div>
                 <div class="col-md-2">
                     <a th:href="${abrigo != null ? '/recursos?abrigoId=' + abrigo.id : '/recursos'}"
                        class="btn btn-outline-secondary w-100">
-                        <i class="fas fa-times me-2"></i>Limpar
+                        <i class="fas fa-times me-2"></i><span th:text="#{btn.limpar}">Limpar</span>
                     </a>
                 </div>
             </form>
@@ -62,9 +70,9 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-boxes fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Nenhum recurso encontrado.</p>
+                    <p class="text-muted" th:text="#{recurso.nenhum.encontrado}">Nenhum recurso encontrado.</p>
                     <a th:href="${abrigo != null ? '/recursos/novo?abrigoId=' + abrigo.id : '/recursos/novo'}"
-                       class="btn btn-primary">Cadastrar Primeiro Recurso</a>
+                       class="btn btn-primary" th:text="#{recurso.primeiro.recurso}">Cadastrar Primeiro Recurso</a>
                 </div>
             </div>
         </div>
@@ -73,18 +81,26 @@
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0" th:text="${recurso.nome}">Nome do Recurso</h6>
-                    <span class="badge bg-secondary" th:text="${recurso.tipo.descricao}">Tipo</span>
+                    <span th:switch="${recurso.tipo.name()}" class="badge bg-secondary">
+                        <span th:case="'ALIMENTO'" th:text="#{tipo.alimento}">Alimento</span>
+                        <span th:case="'ROUPA'" th:text="#{tipo.roupa}">Roupa</span>
+                        <span th:case="'HIGIENE'" th:text="#{tipo.higiene}">Higiene</span>
+                        <span th:case="'MEDICAMENTO'" th:text="#{tipo.medicamento}">Medicamento</span>
+                        <span th:case="'MATERIAL_LIMPEZA'" th:text="#{tipo.material_limpeza}">Material de Limpeza</span>
+                        <span th:case="'OUTROS'" th:text="#{tipo.outros}">Outros</span>
+                        <span th:case="*" th:text="${recurso.tipo.descricao}">Tipo</span>
+                    </span>
                 </div>
                 <div class="card-body">
                     <div class="text-center mb-3">
                         <div class="display-6 mb-2"
                              th:classappend="${recurso.quantidade <= 10} ? 'text-danger' : 'text-success'"
                              th:text="${recurso.quantidade}">0</div>
-                        <small class="text-muted">Quantidade Disponível</small>
+                        <small class="text-muted" th:text="#{recurso.quantidade.disponivel}">Quantidade Disponível</small>
 
                         <div th:if="${recurso.quantidade <= 10}" class="mt-2">
                             <span class="badge bg-warning text-dark">
-                                <i class="fas fa-exclamation-triangle me-1"></i>Estoque Baixo
+                                <i class="fas fa-exclamation-triangle me-1"></i><span th:text="#{recurso.estoque.baixo}">Estoque Baixo</span>
                             </span>
                         </div>
                     </div>
@@ -96,13 +112,13 @@
 
                     <p class="card-text mb-2" th:if="${recurso.abrigo != null}">
                         <i class="fas fa-building me-2"></i>
-                        <strong>Abrigo:</strong> <span th:text="${recurso.abrigo.nome}">-</span>
+                        <strong th:text="#{recurso.abrigo} + ':'">Abrigo:</strong> <span th:text="${recurso.abrigo.nome}">-</span>
                     </p>
 
                     <p class="card-text" th:if="${recurso.dataAtualizacao != null}">
                         <small class="text-muted">
                             <i class="fas fa-clock me-1"></i>
-                            Atualizado: <span th:text="${#dates.format(recurso.dataAtualizacao, 'dd/MM/yyyy HH:mm')}">-</span>
+                            <span th:text="#{recurso.atualizado}">Atualizado</span>: <span th:text="${#dates.format(recurso.dataAtualizacao, 'dd/MM/yyyy HH:mm')}">-</span>
                         </small>
                     </p>
                 </div>
@@ -110,13 +126,13 @@
                     <div>
                         <a th:href="@{/recursos/{id}/editar(id=${recurso.id})}"
                            class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-edit me-1"></i>Editar
+                            <i class="fas fa-edit me-1"></i><span th:text="#{btn.editar}">Editar</span>
                         </a>
                     </div>
                     <form method="post" th:action="@{/recursos/{id}/deletar(id=${recurso.id})}"
-                          class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este recurso?')">
+                          class="d-inline" th:attr="onsubmit='return confirm(\'' + #{recurso.confirmacao.exclusao} + '\')'">
                         <button type="submit" class="btn btn-outline-danger btn-sm">
-                            <i class="fas fa-trash me-1"></i>Excluir
+                            <i class="fas fa-trash me-1"></i><span th:text="#{btn.excluir}">Excluir</span>
                         </button>
                     </form>
                 </div>

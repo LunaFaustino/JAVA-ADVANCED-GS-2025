@@ -3,8 +3,8 @@
 
 <th:block th:fragment="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-chart-bar me-2"></i>Dashboard</h2>
-        <span class="badge bg-primary fs-6">Sistema Abrigue-se</span>
+        <h2><i class="fas fa-chart-bar me-2"></i><span th:text="#{dashboard.titulo}">Dashboard</span></h2>
+        <span class="badge bg-primary fs-6" th:text="#{sistema.nome} + ' - ' + #{sistema.subtitulo}">Sistema Abrigue-se</span>
     </div>
 
     <div class="row mb-4">
@@ -12,9 +12,9 @@
             <div class="card text-center border-primary">
                 <div class="card-body">
                     <div class="display-4 text-primary mb-2" th:text="${totalAbrigos}">0</div>
-                    <h6 class="card-title text-muted">Total de Abrigos</h6>
+                    <h6 class="card-title text-muted" th:text="#{dashboard.total.abrigos}">Total de Abrigos</h6>
                     <small class="text-muted">
-                        <i class="fas fa-building me-1"></i>Cadastrados
+                        <i class="fas fa-building me-1"></i><span th:text="#{dashboard.cadastrados}">Cadastrados</span>
                     </small>
                 </div>
             </div>
@@ -23,9 +23,9 @@
             <div class="card text-center border-info">
                 <div class="card-body">
                     <div class="display-4 text-info mb-2" th:text="${totalVagas}">0</div>
-                    <h6 class="card-title text-muted">Capacidade Total</h6>
+                    <h6 class="card-title text-muted" th:text="#{dashboard.capacidade.total}">Capacidade Total</h6>
                     <small class="text-muted">
-                        <i class="fas fa-bed me-1"></i>Vagas totais
+                        <i class="fas fa-bed me-1"></i><span th:text="#{dashboard.vagas.totais}">Vagas totais</span>
                     </small>
                 </div>
             </div>
@@ -34,9 +34,9 @@
             <div class="card text-center border-warning">
                 <div class="card-body">
                     <div class="display-4 text-warning mb-2" th:text="${totalOcupadas}">0</div>
-                    <h6 class="card-title text-muted">Vagas Ocupadas</h6>
+                    <h6 class="card-title text-muted" th:text="#{dashboard.vagas.ocupadas}">Vagas Ocupadas</h6>
                     <small class="text-muted">
-                        <i class="fas fa-users me-1"></i>Pessoas abrigadas
+                        <i class="fas fa-users me-1"></i><span th:text="#{dashboard.pessoas.abrigadas}">Pessoas abrigadas</span>
                     </small>
                 </div>
             </div>
@@ -45,9 +45,9 @@
             <div class="card text-center border-success">
                 <div class="card-body">
                     <div class="display-4 text-success mb-2" th:text="${totalDisponiveis}">0</div>
-                    <h6 class="card-title text-muted">Vagas Livres</h6>
+                    <h6 class="card-title text-muted" th:text="#{dashboard.vagas.livres}">Vagas Livres</h6>
                     <small class="text-muted">
-                        <i class="fas fa-check-circle me-1"></i>Disponíveis agora
+                        <i class="fas fa-check-circle me-1"></i><span th:text="#{dashboard.disponiveis.agora}">Disponíveis agora</span>
                     </small>
                 </div>
             </div>
@@ -59,18 +59,18 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
-                        <i class="fas fa-list me-2"></i>Resumo dos Abrigos
+                        <i class="fas fa-list me-2"></i><span th:text="#{dashboard.resumo.abrigos}">Resumo dos Abrigos</span>
                     </h5>
                     <a href="/abrigos" class="btn btn-outline-primary btn-sm">
-                        Ver Todos <i class="fas fa-arrow-right ms-1"></i>
+                        <span th:text="#{btn.ver.todos}">Ver Todos</span> <i class="fas fa-arrow-right ms-1"></i>
                     </a>
                 </div>
                 <div class="card-body p-0">
                     <div th:if="${#lists.isEmpty(abrigos)}" class="text-center py-5">
                         <i class="fas fa-building fa-3x text-muted mb-3"></i>
-                        <p class="text-muted mb-3">Nenhum abrigo cadastrado ainda.</p>
+                        <p class="text-muted mb-3" th:text="#{dashboard.nenhum.abrigo}">Nenhum abrigo cadastrado ainda.</p>
                         <a href="/abrigos/novo" class="btn btn-primary">
-                            <i class="fas fa-plus me-2"></i>Cadastrar Primeiro Abrigo
+                            <i class="fas fa-plus me-2"></i><span th:text="#{dashboard.primeiro.abrigo}">Cadastrar Primeiro Abrigo</span>
                         </a>
                     </div>
 
@@ -78,12 +78,12 @@
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
                             <tr>
-                                <th>Nome do Abrigo</th>
-                                <th>Status</th>
-                                <th>Ocupação</th>
-                                <th>Vagas</th>
-                                <th>Responsável</th>
-                                <th>Ações</th>
+                                <th th:text="#{tabela.nome}">Nome do Abrigo</th>
+                                <th th:text="#{tabela.status}">Status</th>
+                                <th th:text="#{tabela.ocupacao}">Ocupação</th>
+                                <th th:text="#{tabela.vagas}">Vagas</th>
+                                <th th:text="#{tabela.responsavel}">Responsável</th>
+                                <th th:text="#{tabela.acoes}">Ações</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -93,9 +93,15 @@
                                     <small class="text-muted" th:text="${abrigo.endereco}">Endereço</small>
                                 </td>
                                 <td>
-                                    <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
-                                                 (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
-                                          th:text="${abrigo.status.descricao}">Status</span>
+                                    <span th:switch="${abrigo.status.name()}"
+                                          th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                                   (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))">
+                                        <span th:case="'ATIVO'" th:text="#{status.ativo}">Ativo</span>
+                                        <span th:case="'INATIVO'" th:text="#{status.inativo}">Inativo</span>
+                                        <span th:case="'LOTADO'" th:text="#{status.lotado}">Lotado</span>
+                                        <span th:case="'MANUTENCAO'" th:text="#{status.manutencao}">Em Manutenção</span>
+                                        <span th:case="*" th:text="${abrigo.status.descricao}">Status</span>
+                                    </span>
                                 </td>
                                 <td>
                                     <div class="progress" style="height: 8px;">

@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout/base :: layout(~{::content})}">
 
 <th:block th:fragment="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>
-            <i class="fas fa-user me-2"></i>Meu Perfil
+            <i class="fas fa-user me-2"></i><span th:text="#{perfil.titulo}">Meu Perfil</span>
         </h2>
         <a href="/dashboard" class="btn btn-outline-secondary">
-            <i class="fas fa-arrow-left me-2"></i>Voltar ao Dashboard
+            <i class="fas fa-arrow-left me-2"></i><span th:text="#{perfil.voltar.dashboard}">Voltar ao Dashboard</span>
         </a>
     </div>
 
@@ -18,7 +17,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-id-card me-2"></i>Informações da Conta
+                        <i class="fas fa-id-card me-2"></i><span th:text="#{perfil.informacoes.conta}">Informações da Conta</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -32,23 +31,23 @@
 
                             <div class="badge bg-success mb-3">
                                 <i class="fas fa-check-circle me-1"></i>
-                                Conta Verificada
+                                <span th:text="#{perfil.conta.verificada}">Conta Verificada</span>
                             </div>
                         </div>
 
                         <div class="col-md-8">
                             <div class="row mb-3">
                                 <div class="col-sm-4">
-                                    <strong><i class="fas fa-user me-2 text-muted"></i>Nome:</strong>
+                                    <strong><i class="fas fa-user me-2 text-muted"></i><span th:text="#{perfil.nome} + ':'">Nome:</span></strong>
                                 </div>
-                                <div class="col-sm-8">
-                                    <span th:text="${name ?: 'Não informado'}" class="fs-5">Nome</span>
+                                <div class="col-sm-8" th:with="naoInformado=#{perfil.nao.informado}">
+                                    <span th:text="${name ?: naoInformado}" class="fs-5">Nome</span>
                                 </div>
                             </div>
 
                             <div class="row mb-3">
                                 <div class="col-sm-4">
-                                    <strong><i class="fab fa-google me-2 text-muted"></i>Provedor:</strong>
+                                    <strong><i class="fab fa-google me-2 text-muted"></i><span th:text="#{perfil.provedor} + ':'">Provedor:</span></strong>
                                 </div>
                                 <div class="col-sm-8">
                                     <span class="badge bg-primary">Google OAuth 2.0</span>
@@ -57,13 +56,13 @@
 
                             <div class="row mb-3">
                                 <div class="col-sm-4">
-                                    <strong><i class="fas fa-clock me-2 text-muted"></i>Sessão:</strong>
+                                    <strong><i class="fas fa-clock me-2 text-muted"></i><span th:text="#{perfil.sessao} + ':'">Sessão:</span></strong>
                                 </div>
                                 <div class="col-sm-8">
-                                    <span class="badge bg-success">Ativa</span>
+                                    <span class="badge bg-success" th:text="#{perfil.sessao.ativa}">Ativa</span>
                                     <small class="text-muted ms-2">
                                         <i class="fas fa-info-circle"></i>
-                                        Sessão expira em 30 minutos de inatividade
+                                        <span th:text="#{perfil.sessao.expira}">Sessão expira em 30 minutos de inatividade</span>
                                     </small>
                                 </div>
                             </div>
@@ -75,15 +74,15 @@
                     <div class="row">
                         <div class="col-12">
                             <h6 class="mb-3">
-                                <i class="fas fa-shield-alt me-2"></i>Informações de Segurança
+                                <i class="fas fa-shield-alt me-2"></i><span th:text="#{perfil.seguranca}">Informações de Segurança</span>
                             </h6>
 
                             <div class="alert alert-info">
                                 <div class="d-flex align-items-start">
                                     <i class="fas fa-info-circle me-3 mt-1"></i>
                                     <div>
-                                        <strong>Autenticação Segura</strong>
-                                        <p class="mb-0 mt-1">
+                                        <strong th:text="#{perfil.autenticacao.segura}">Autenticação Segura</strong>
+                                        <p class="mb-0 mt-1" th:text="#{perfil.oauth.descricao}">
                                             Sua conta está protegida pela autenticação OAuth 2.0 do Google.
                                             Suas credenciais são gerenciadas diretamente pelo Google e não
                                             são armazenadas em nossos servidores.
@@ -97,8 +96,8 @@
                                     <div class="card bg-light">
                                         <div class="card-body">
                                             <i class="fas fa-lock fa-2x text-success mb-2"></i>
-                                            <h6 class="card-title">Criptografia</h6>
-                                            <small class="text-muted">Dados protegidos com SSL</small>
+                                            <h6 class="card-title" th:text="#{perfil.criptografia}">Criptografia</h6>
+                                            <small class="text-muted" th:text="#{perfil.dados.ssl}">Dados protegidos com SSL</small>
                                         </div>
                                     </div>
                                 </div>
@@ -107,8 +106,8 @@
                                     <div class="card bg-light">
                                         <div class="card-body">
                                             <i class="fas fa-user-shield fa-2x text-primary mb-2"></i>
-                                            <h6 class="card-title">Privacidade</h6>
-                                            <small class="text-muted">Dados não compartilhados</small>
+                                            <h6 class="card-title" th:text="#{perfil.privacidade}">Privacidade</h6>
+                                            <small class="text-muted" th:text="#{perfil.dados.nao.compartilhados}">Dados não compartilhados</small>
                                         </div>
                                     </div>
                                 </div>
@@ -117,8 +116,8 @@
                                     <div class="card bg-light">
                                         <div class="card-body">
                                             <i class="fas fa-clock fa-2x text-warning mb-2"></i>
-                                            <h6 class="card-title">Sessão Segura</h6>
-                                            <small class="text-muted">Logout automático</small>
+                                            <h6 class="card-title" th:text="#{perfil.sessao.segura}">Sessão Segura</h6>
+                                            <small class="text-muted" th:text="#{perfil.logout.automatico}">Logout automático</small>
                                         </div>
                                     </div>
                                 </div>
@@ -130,7 +129,7 @@
                 <div class="card-footer text-end">
                     <form action="/logout" method="post" class="d-inline">
                         <button type="submit" class="btn btn-outline-danger">
-                            <i class="fas fa-sign-out-alt me-2"></i>Sair da Conta
+                            <i class="fas fa-sign-out-alt me-2"></i><span th:text="#{perfil.sair.conta}">Sair da Conta</span>
                         </button>
                     </form>
                 </div>
@@ -143,7 +142,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-cog me-2"></i>Ações Rápidas
+                        <i class="fas fa-cog me-2"></i><span th:text="#{perfil.acoes.rapidas}">Ações Rápidas</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -151,25 +150,25 @@
                         <div class="col-md-3 mb-3">
                             <a href="/dashboard" class="btn btn-outline-primary w-100">
                                 <i class="fas fa-chart-bar fa-2x mb-2 d-block"></i>
-                                Dashboard
+                                <span th:text="#{nav.dashboard}">Dashboard</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="/abrigos" class="btn btn-outline-info w-100">
                                 <i class="fas fa-building fa-2x mb-2 d-block"></i>
-                                Abrigos
+                                <span th:text="#{nav.abrigos}">Abrigos</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="/pessoas" class="btn btn-outline-success w-100">
                                 <i class="fas fa-users fa-2x mb-2 d-block"></i>
-                                Pessoas
+                                <span th:text="#{nav.pessoas}">Pessoas</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a href="/recursos" class="btn btn-outline-warning w-100">
                                 <i class="fas fa-boxes fa-2x mb-2 d-block"></i>
-                                Recursos
+                                <span th:text="#{nav.recursos}">Recursos</span>
                             </a>
                         </div>
                     </div>

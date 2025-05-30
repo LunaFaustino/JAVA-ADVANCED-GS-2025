@@ -3,9 +3,9 @@
 
 <th:block th:fragment="content">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="fas fa-building me-2"></i>Gerenciar Abrigos</h2>
+        <h2><i class="fas fa-building me-2"></i><span th:text="#{abrigo.gerenciar}">Gerenciar Abrigos</span></h2>
         <a href="/abrigos/novo" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Novo Abrigo
+            <i class="fas fa-plus me-2"></i><span th:text="#{abrigo.novo}">Novo Abrigo</span>
         </a>
     </div>
 
@@ -14,11 +14,11 @@
             <form method="get" class="row g-3">
                 <div class="col-md-10">
                     <input type="text" class="form-control" name="busca"
-                           th:value="${busca}" placeholder="Buscar por nome do abrigo...">
+                           th:value="${busca}" th:placeholder="#{abrigo.buscar.placeholder}">
                 </div>
                 <div class="col-md-2">
                     <button type="submit" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-search me-2"></i>Buscar
+                        <i class="fas fa-search me-2"></i><span th:text="#{btn.buscar}">Buscar</span>
                     </button>
                 </div>
             </form>
@@ -30,8 +30,8 @@
             <div class="card text-center">
                 <div class="card-body">
                     <i class="fas fa-building fa-3x text-muted mb-3"></i>
-                    <p class="text-muted">Nenhum abrigo encontrado.</p>
-                    <a href="/abrigos/novo" class="btn btn-primary">Cadastrar Primeiro Abrigo</a>
+                    <p class="text-muted" th:text="#{abrigo.nenhum.encontrado}">Nenhum abrigo encontrado.</p>
+                    <a href="/abrigos/novo" class="btn btn-primary" th:text="#{dashboard.primeiro.abrigo}">Cadastrar Primeiro Abrigo</a>
                 </div>
             </div>
         </div>
@@ -40,9 +40,15 @@
             <div class="card h-100">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0" th:text="${abrigo.nome}">Nome do Abrigo</h5>
-                    <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
-                                     (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
-                          th:text="${abrigo.status.descricao}">Status</span>
+                    <span th:switch="${abrigo.status.name()}"
+                          th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                     (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))">
+                        <span th:case="'ATIVO'" th:text="#{status.ativo}">Ativo</span>
+                        <span th:case="'INATIVO'" th:text="#{status.inativo}">Inativo</span>
+                        <span th:case="'LOTADO'" th:text="#{status.lotado}">Lotado</span>
+                        <span th:case="'MANUTENCAO'" th:text="#{status.manutencao}">Em Manutenção</span>
+                        <span th:case="*" th:text="${abrigo.status.descricao}">Status</span>
+                    </span>
                 </div>
                 <div class="card-body">
                     <p class="card-text">
@@ -54,12 +60,12 @@
                         <div class="col-6">
                             <div class="border-end">
                                 <h4 class="text-primary mb-0" th:text="${abrigo.vagasOcupadas}">0</h4>
-                                <small class="text-muted">Ocupadas</small>
+                                <small class="text-muted" th:text="#{abrigo.ocupadas}">Ocupadas</small>
                             </div>
                         </div>
                         <div class="col-6">
                             <h4 class="text-success mb-0" th:text="${abrigo.capacidadeMaxima - abrigo.vagasOcupadas}">0</h4>
-                            <small class="text-muted">Disponíveis</small>
+                            <small class="text-muted" th:text="#{abrigo.disponiveis}">Disponíveis</small>
                         </div>
                     </div>
 
@@ -74,22 +80,22 @@
                     <p class="card-text">
                         <small class="text-muted">
                             <i class="fas fa-user me-1"></i>
-                            Responsável: <span th:text="${abrigo.responsavel ?: '-'}">-</span>
+                            <span th:text="#{abrigo.responsavel}">Responsável</span>: <span th:text="${abrigo.responsavel ?: '-'}">-</span>
                         </small>
                     </p>
                 </div>
                 <div class="card-footer d-flex justify-content-between">
                     <a th:href="@{/abrigos/{id}(id=${abrigo.id})}" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-eye me-1"></i>Detalhes
+                        <i class="fas fa-eye me-1"></i><span th:text="#{btn.detalhes}">Detalhes</span>
                     </a>
                     <div>
                         <a th:href="@{/abrigos/{id}/editar(id=${abrigo.id})}" class="btn btn-outline-secondary btn-sm">
-                            <i class="fas fa-edit me-1"></i>Editar
+                            <i class="fas fa-edit me-1"></i><span th:text="#{btn.editar}">Editar</span>
                         </a>
                         <form method="post" th:action="@{/abrigos/{id}/deletar(id=${abrigo.id})}"
-                              class="d-inline" onsubmit="return confirm('Tem certeza que deseja excluir este abrigo?')">
+                              class="d-inline" th:attr="onsubmit='return confirm(\'' + #{abrigo.confirmacao.exclusao} + '\')'">
                             <button type="submit" class="btn btn-outline-danger btn-sm">
-                                <i class="fas fa-trash me-1"></i>Excluir
+                                <i class="fas fa-trash me-1"></i><span th:text="#{btn.excluir}">Excluir</span>
                             </button>
                         </form>
                     </div>

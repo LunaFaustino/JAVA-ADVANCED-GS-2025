@@ -9,10 +9,10 @@
         </h2>
         <div>
             <a th:href="@{/abrigos/{id}/editar(id=${abrigo.id})}" class="btn btn-outline-primary me-2">
-                <i class="fas fa-edit me-2"></i>Editar
+                <i class="fas fa-edit me-2"></i><span th:text="#{btn.editar}">Editar</span>
             </a>
             <a href="/abrigos" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>Voltar
+                <i class="fas fa-arrow-left me-2"></i><span th:text="#{btn.voltar}">Voltar</span>
             </a>
         </div>
     </div>
@@ -22,7 +22,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <div class="display-4 text-primary mb-2" th:text="${abrigo.capacidadeMaxima}">0</div>
-                    <h6 class="card-title text-muted">Capacidade Total</h6>
+                    <h6 class="card-title text-muted" th:text="#{abrigo.capacidade.total}">Capacidade Total</h6>
                 </div>
             </div>
         </div>
@@ -30,7 +30,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <div class="display-4 text-warning mb-2" th:text="${abrigo.vagasOcupadas}">0</div>
-                    <h6 class="card-title text-muted">Vagas Ocupadas</h6>
+                    <h6 class="card-title text-muted" th:text="#{abrigo.vagas.ocupadas}">Vagas Ocupadas</h6>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
             <div class="card text-center">
                 <div class="card-body">
                     <div class="display-4 text-success mb-2" th:text="${vagasDisponiveis}">0</div>
-                    <h6 class="card-title text-muted">Vagas Disponíveis</h6>
+                    <h6 class="card-title text-muted" th:text="#{abrigo.vagas.disponiveis}">Vagas Disponíveis</h6>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
                          th:classappend="${percentualOcupacao > 80} ? 'text-danger' :
                                        (${percentualOcupacao > 60} ? 'text-warning' : 'text-info')"
                          th:text="${#numbers.formatDecimal(percentualOcupacao, 1, 1)} + '%'">0%</div>
-                    <h6 class="card-title text-muted">Taxa de Ocupação</h6>
+                    <h6 class="card-title text-muted" th:text="#{abrigo.taxa.ocupacao}">Taxa de Ocupação</h6>
                 </div>
             </div>
         </div>
@@ -60,7 +60,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-chart-pie me-2"></i>Ocupação do Abrigo
+                        <i class="fas fa-chart-pie me-2"></i><span th:text="#{abrigo.ocupacao}">Ocupação do Abrigo</span>
                     </h5>
                 </div>
                 <div class="card-body text-center">
@@ -73,31 +73,37 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-info-circle me-2"></i>Informações Gerais
+                        <i class="fas fa-info-circle me-2"></i><span th:text="#{abrigo.informacoes.gerais}">Informações Gerais</span>
                     </h5>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-sm-4"><strong>Status:</strong></div>
+                        <div class="col-sm-4"><strong th:text="#{abrigo.status} + ':'">Status:</strong></div>
                         <div class="col-sm-8">
-                            <span th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
-                                         (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))"
-                                  th:text="${abrigo.status.descricao}">Status</span>
+                            <span th:switch="${abrigo.status.name()}"
+                                  th:class="'badge ' + (${abrigo.status.name()} == 'ATIVO' ? 'bg-success' :
+                                           (${abrigo.status.name()} == 'LOTADO' ? 'bg-danger' : 'bg-secondary'))">
+                                <span th:case="'ATIVO'" th:text="#{status.ativo}">Ativo</span>
+                                <span th:case="'INATIVO'" th:text="#{status.inativo}">Inativo</span>
+                                <span th:case="'LOTADO'" th:text="#{status.lotado}">Lotado</span>
+                                <span th:case="'MANUTENCAO'" th:text="#{status.manutencao}">Em Manutenção</span>
+                                <span th:case="*" th:text="${abrigo.status.descricao}">Status</span>
+                            </span>
                         </div>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-sm-4"><strong>Endereço:</strong></div>
+                        <div class="col-sm-4"><strong th:text="#{abrigo.endereco} + ':'">Endereço:</strong></div>
                         <div class="col-sm-8" th:text="${abrigo.endereco}">Endereço</div>
                     </div>
 
                     <div class="row mb-3" th:if="${abrigo.responsavel}">
-                        <div class="col-sm-4"><strong>Responsável:</strong></div>
+                        <div class="col-sm-4"><strong th:text="#{abrigo.responsavel} + ':'">Responsável:</strong></div>
                         <div class="col-sm-8" th:text="${abrigo.responsavel}">Responsável</div>
                     </div>
 
                     <div class="row mb-3" th:if="${abrigo.telefone}">
-                        <div class="col-sm-4"><strong>Telefone:</strong></div>
+                        <div class="col-sm-4"><strong th:text="#{abrigo.telefone} + ':'">Telefone:</strong></div>
                         <div class="col-sm-8" th:text="${abrigo.telefone}">Telefone</div>
                     </div>
                 </div>
@@ -110,7 +116,7 @@
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">
-                        <i class="fas fa-bolt me-2"></i>Ações Rápidas
+                        <i class="fas fa-bolt me-2"></i><span th:text="#{abrigo.acoes.rapidas}">Ações Rápidas</span>
                     </h5>
                 </div>
                 <div class="card-body">
@@ -119,28 +125,28 @@
                             <a th:href="@{/pessoas/novo?abrigoId={id}(id=${abrigo.id})}"
                                class="btn btn-outline-primary w-100">
                                 <i class="fas fa-user-plus fa-2x mb-2 d-block"></i>
-                                Cadastrar Pessoa
+                                <span th:text="#{abrigo.cadastrar.pessoa}">Cadastrar Pessoa</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a th:href="@{/pessoas?abrigoId={id}(id=${abrigo.id})}"
                                class="btn btn-outline-info w-100">
                                 <i class="fas fa-users fa-2x mb-2 d-block"></i>
-                                Ver Pessoas
+                                <span th:text="#{abrigo.ver.pessoas}">Ver Pessoas</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a th:href="@{/recursos/novo?abrigoId={id}(id=${abrigo.id})}"
                                class="btn btn-outline-success w-100">
                                 <i class="fas fa-plus-square fa-2x mb-2 d-block"></i>
-                                Adicionar Recurso
+                                <span th:text="#{abrigo.adicionar.recurso}">Adicionar Recurso</span>
                             </a>
                         </div>
                         <div class="col-md-3 mb-3">
                             <a th:href="@{/recursos?abrigoId={id}(id=${abrigo.id})}"
                                class="btn btn-outline-warning w-100">
                                 <i class="fas fa-boxes fa-2x mb-2 d-block"></i>
-                                Ver Recursos
+                                <span th:text="#{abrigo.ver.recursos}">Ver Recursos</span>
                             </a>
                         </div>
                     </div>
@@ -176,10 +182,13 @@
                 corOcupadas = cores.primaria;
             }
 
+            const labelOcupadas = /*[[#{abrigo.vagas.ocupadas}]]*/ 'Vagas Ocupadas';
+            const labelDisponiveis = /*[[#{abrigo.vagas.disponiveis}]]*/ 'Vagas Disponíveis';
+
             new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Vagas Ocupadas', 'Vagas Disponíveis'],
+                    labels: [labelOcupadas, labelDisponiveis],
                     datasets: [{
                         data: [vagasOcupadas, vagasDisponiveis],
                         backgroundColor: [
