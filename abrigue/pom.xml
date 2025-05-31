@@ -134,12 +134,8 @@
                 <version>2.12.0</version>
                 <configuration>
                     <schemaVersion>v2</schemaVersion>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <subscriptionId>${AZURE_SUBSCRIPTION_ID}</subscriptionId>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <resourceGroup>${AZURE_RESOURCE_GROUP}</resourceGroup>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <appName>${AZURE_APP_NAME}</appName>
+                    <resourceGroup>rg-abrigue-se</resourceGroup>
+                    <appName>abrigue-se-app</appName>
                     <pricingTier>F1</pricingTier>
                     <region>Brazil South</region>
                     <runtime>
