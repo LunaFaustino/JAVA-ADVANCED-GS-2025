@@ -21,6 +21,12 @@ Facilitar a gestão de abrigos em situações de emergência, fornecendo:
 
 ---
 
+### 🌐 Acesso à Aplicação
+
+https://abrigue-se-app.azurewebsites.net/
+
+---
+
 ## 🚀 Tecnologias Utilizadas
 
 - **Java 21**
@@ -30,7 +36,8 @@ Facilitar a gestão de abrigos em situações de emergência, fornecendo:
 - **Spring Security + OAuth2**
 - **Spring AI (Azure OpenAI)**
 - **RabbitMQ**
-- **Oracle Database** (Produção)
+- **PostgreSQL** (Produção)
+- **Oracle Database** (Desenvolvimento)
 - **H2 Database** (Testes)
 - **Bootstrap 5**
 - **Chart.js**
