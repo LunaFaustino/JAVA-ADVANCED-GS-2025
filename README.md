@@ -6,9 +6,19 @@
 **Desenvolvedora**: Larissa Lopes Oliveira **RM**: 552628 <br>
 **Desenvolvedora**: Larissa Araújo Gama Alvarenga **RM**: 96496
 
+---
+
+### 🌐 Acesso à Aplicação
+
+https://abrigue-se-app.azurewebsites.net/
+
+---
+
 ## 📋 Sobre o Projeto
 
 O **Abrigue-se** é um sistema web desenvolvido em Java com Spring Boot para gerenciamento eficiente de abrigos emergenciais. A aplicação oferece uma solução completa para coordenadores e gestores públicos monitorarem a ocupação de abrigos, o bem-estar das pessoas abrigadas e a disponibilidade de recursos essenciais.
+
+---
 
 ### 🎯 Objetivo
 
@@ -18,12 +28,6 @@ Facilitar a gestão de abrigos em situações de emergência, fornecendo:
 - Gestão de recursos e suprimentos
 - Análises inteligentes via IA
 - Sistema de alertas automatizados
-
----
-
-### 🌐 Acesso à Aplicação
-
-https://abrigue-se-app.azurewebsites.net/
 
 ---
 
