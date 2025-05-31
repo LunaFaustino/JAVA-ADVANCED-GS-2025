@@ -1,10 +1,10 @@
 # 🏠 Abrigue-se - Sistema de Gerenciamento de Abrigos
 
-## 👥 Equipe
+## 👥 Desenvolvedoras
 
-**Desenvolvedora**: Luna Faustino Lima **RM**: 552473 <br>
-**Desenvolvedora**: Larissa Lopes Oliveira **RM**: 552628 <br>
-**Desenvolvedora**: Larissa Araújo Gama Alvarenga **RM**: 96496
+Luna Faustino Lima - **RM**: 552473 - **Turma**: 2TDSPS <br>
+Larissa Araújo Gama Alvarenga - **RM**: 96496 - **Turma**: 2TDSPS <br>
+Larissa Lopes Oliveira - **RM**: 552628 - **Turma**: 2TDSPC 
 
 ---
 
