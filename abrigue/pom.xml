@@ -65,8 +65,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -113,6 +113,11 @@
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>com.oracle.database.jdbc</groupId>
+            <artifactId>ojdbc11</artifactId>
+            <scope>runtime</scope>
+        </dependency>
     </dependencies>
 
 
@@ -121,6 +126,38 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-webapp-maven-plugin</artifactId>
+                <version>2.12.0</version>
+                <configuration>
+                    <schemaVersion>v2</schemaVersion>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <subscriptionId>${AZURE_SUBSCRIPTION_ID}</subscriptionId>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <resourceGroup>${AZURE_RESOURCE_GROUP}</resourceGroup>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <appName>${AZURE_APP_NAME}</appName>
+                    <pricingTier>F1</pricingTier>
+                    <region>Brazil South</region>
+                    <runtime>
+                        <os>Linux</os>
+                        <javaVersion>Java 21</javaVersion>
+                        <webContainer>Java SE</webContainer>
+                    </runtime>
+                    <deployment>
+                        <resources>
+                            <resource>
+                                <directory>${project.basedir}/target</directory>
+                                <includes>
+                                    <include>*.jar</include>
+                                </includes>
+                            </resource>
+                        </resources>
+                    </deployment>
+                </configuration>
             </plugin>
         </plugins>
     </build>
