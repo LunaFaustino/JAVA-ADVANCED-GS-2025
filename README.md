@@ -14,6 +14,18 @@ https://abrigue-se-app.azurewebsites.net/
 
 ---
 
+### 📹 Apresentação da Entrega
+
+https://www.youtube.com/watch?v=8NgFvEyvbDc
+
+---
+
+### 💹 Apresentação do Pitch
+
+https://www.youtube.com/watch?v=DkNgM5Sk05s
+
+---
+
 ## 📋 Sobre o Projeto
 
 O **Abrigue-se** é um sistema web desenvolvido em Java com Spring Boot para gerenciamento eficiente de abrigos emergenciais. A aplicação oferece uma solução completa para coordenadores e gestores públicos monitorarem a ocupação de abrigos, o bem-estar das pessoas abrigadas e a disponibilidade de recursos essenciais.
